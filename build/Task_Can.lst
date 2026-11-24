@@ -1,0 +1,302 @@
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"Task_Can.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "BSP_DJI/Src/Task_Can.c"
+  19              		.section	.text.CANTransmit,"ax",%progbits
+  20              		.align	1
+  21              		.global	CANTransmit
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	CANTransmit:
+  27              	.LVL0:
+  28              	.LFB151:
+   1:BSP_DJI/Src/Task_Can.c **** #include "Task_Can.h"
+   2:BSP_DJI/Src/Task_Can.c **** #include "User_CAN.h"
+   3:BSP_DJI/Src/Task_Can.c **** 
+   4:BSP_DJI/Src/Task_Can.c **** extern FDCAN_HandleTypeDef hfdcan1;
+   5:BSP_DJI/Src/Task_Can.c **** 
+   6:BSP_DJI/Src/Task_Can.c **** /* 
+   7:BSP_DJI/Src/Task_Can.c ****  * CAN 发送任务 (纯硬件发送，无监控代码)
+   8:BSP_DJI/Src/Task_Can.c ****  */
+   9:BSP_DJI/Src/Task_Can.c **** CanSend_Type CAN_Tx_Msg;
+  10:BSP_DJI/Src/Task_Can.c **** 
+  11:BSP_DJI/Src/Task_Can.c **** void Task_CAN(void *parameters)
+  12:BSP_DJI/Src/Task_Can.c **** {
+  13:BSP_DJI/Src/Task_Can.c ****   (void)parameters;
+  14:BSP_DJI/Src/Task_Can.c ****   
+  15:BSP_DJI/Src/Task_Can.c ****   // 🌟 初始化 CAN。如果你硬件没有 CAN2/CAN3，请把下面两行注释掉！
+  16:BSP_DJI/Src/Task_Can.c ****   CAN_Init(&hfdcan1);
+  17:BSP_DJI/Src/Task_Can.c ****   // CAN_Init(&hfdcan2); 
+  18:BSP_DJI/Src/Task_Can.c ****   // CAN_Init(&hfdcan3);
+  19:BSP_DJI/Src/Task_Can.c **** 
+  20:BSP_DJI/Src/Task_Can.c ****   while (1)
+  21:BSP_DJI/Src/Task_Can.c ****   {
+  22:BSP_DJI/Src/Task_Can.c ****     // 死等队列数据，没数据就休眠
+  23:BSP_DJI/Src/Task_Can.c ****     if (xQueueReceive(Queue_CANSend, &CAN_Tx_Msg, portMAX_DELAY) != pdPASS)
+  24:BSP_DJI/Src/Task_Can.c ****       continue;
+  25:BSP_DJI/Src/Task_Can.c **** 
+  26:BSP_DJI/Src/Task_Can.c ****     // 根据报文里的 CANx 选择对应的硬件发送
+  27:BSP_DJI/Src/Task_Can.c ****     switch (CAN_Tx_Msg.CANx)
+  28:BSP_DJI/Src/Task_Can.c ****     {
+  29:BSP_DJI/Src/Task_Can.c ****     case CANSEND_1:
+  30:BSP_DJI/Src/Task_Can.c ****       CANTransmit(&hfdcan1, CAN_Tx_Msg.stdid, CAN_Tx_Msg.Data);
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s 			page 2
+
+
+  31:BSP_DJI/Src/Task_Can.c ****       break;
+  32:BSP_DJI/Src/Task_Can.c ****     default:
+  33:BSP_DJI/Src/Task_Can.c ****       break;
+  34:BSP_DJI/Src/Task_Can.c ****     }
+  35:BSP_DJI/Src/Task_Can.c ****   }
+  36:BSP_DJI/Src/Task_Can.c **** }
+  37:BSP_DJI/Src/Task_Can.c **** 
+  38:BSP_DJI/Src/Task_Can.c **** void CANTransmit(FDCAN_HandleTypeDef *hfdcan, uint32_t std_id, uint8_t aData[])
+  39:BSP_DJI/Src/Task_Can.c **** {
+  29              		.loc 1 39 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 40
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 39 1 is_stmt 0 view .LVU1
+  34 0000 10B5     		push	{r4, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 4, -8
+  38              		.cfi_offset 14, -4
+  39 0002 8AB0     		sub	sp, sp, #40
+  40              	.LCFI1:
+  41              		.cfi_def_cfa_offset 48
+  42 0004 0446     		mov	r4, r0
+  40:BSP_DJI/Src/Task_Can.c ****   FDCAN_TxHeaderTypeDef TxHeader;
+  43              		.loc 1 40 3 is_stmt 1 view .LVU2
+  41:BSP_DJI/Src/Task_Can.c **** 
+  42:BSP_DJI/Src/Task_Can.c ****   // 配置报文头
+  43:BSP_DJI/Src/Task_Can.c ****   TxHeader.Identifier = std_id;
+  44              		.loc 1 43 3 view .LVU3
+  45              		.loc 1 43 23 is_stmt 0 view .LVU4
+  46 0006 0191     		str	r1, [sp, #4]
+  44:BSP_DJI/Src/Task_Can.c ****   TxHeader.IdType = FDCAN_STANDARD_ID;
+  47              		.loc 1 44 3 is_stmt 1 view .LVU5
+  48              		.loc 1 44 19 is_stmt 0 view .LVU6
+  49 0008 0023     		movs	r3, #0
+  50 000a 0293     		str	r3, [sp, #8]
+  45:BSP_DJI/Src/Task_Can.c ****   TxHeader.TxFrameType = FDCAN_DATA_FRAME;
+  51              		.loc 1 45 3 is_stmt 1 view .LVU7
+  52              		.loc 1 45 24 is_stmt 0 view .LVU8
+  53 000c 0393     		str	r3, [sp, #12]
+  46:BSP_DJI/Src/Task_Can.c ****   TxHeader.DataLength = FDCAN_DLC_BYTES_8;
+  54              		.loc 1 46 3 is_stmt 1 view .LVU9
+  55              		.loc 1 46 23 is_stmt 0 view .LVU10
+  56 000e 0821     		movs	r1, #8
+  57              	.LVL1:
+  58              		.loc 1 46 23 view .LVU11
+  59 0010 0491     		str	r1, [sp, #16]
+  47:BSP_DJI/Src/Task_Can.c ****   TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+  60              		.loc 1 47 3 is_stmt 1 view .LVU12
+  61              		.loc 1 47 32 is_stmt 0 view .LVU13
+  62 0012 0593     		str	r3, [sp, #20]
+  48:BSP_DJI/Src/Task_Can.c ****   TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
+  63              		.loc 1 48 3 is_stmt 1 view .LVU14
+  64              		.loc 1 48 26 is_stmt 0 view .LVU15
+  65 0014 0693     		str	r3, [sp, #24]
+  49:BSP_DJI/Src/Task_Can.c ****   TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
+  66              		.loc 1 49 3 is_stmt 1 view .LVU16
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s 			page 3
+
+
+  67              		.loc 1 49 21 is_stmt 0 view .LVU17
+  68 0016 0793     		str	r3, [sp, #28]
+  50:BSP_DJI/Src/Task_Can.c ****   TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+  69              		.loc 1 50 3 is_stmt 1 view .LVU18
+  70              		.loc 1 50 31 is_stmt 0 view .LVU19
+  71 0018 0893     		str	r3, [sp, #32]
+  51:BSP_DJI/Src/Task_Can.c ****   TxHeader.MessageMarker = 0x00;
+  72              		.loc 1 51 3 is_stmt 1 view .LVU20
+  73              		.loc 1 51 26 is_stmt 0 view .LVU21
+  74 001a 0993     		str	r3, [sp, #36]
+  52:BSP_DJI/Src/Task_Can.c **** 
+  53:BSP_DJI/Src/Task_Can.c ****   // 丢给底层硬件发送
+  54:BSP_DJI/Src/Task_Can.c ****   if (HAL_FDCAN_AddMessageToTxFifoQ(hfdcan, &TxHeader, aData) != HAL_OK)
+  75              		.loc 1 54 3 is_stmt 1 view .LVU22
+  76              		.loc 1 54 7 is_stmt 0 view .LVU23
+  77 001c 01A9     		add	r1, sp, #4
+  78              	.LVL2:
+  79              		.loc 1 54 7 view .LVU24
+  80 001e FFF7FEFF 		bl	HAL_FDCAN_AddMessageToTxFifoQ
+  81              	.LVL3:
+  82              		.loc 1 54 6 discriminator 1 view .LVU25
+  83 0022 08B9     		cbnz	r0, .L4
+  84              	.L1:
+  55:BSP_DJI/Src/Task_Can.c ****   {
+  56:BSP_DJI/Src/Task_Can.c ****     // 发送失败，重启一次 CAN 硬件（简易的总线恢复机制）
+  57:BSP_DJI/Src/Task_Can.c ****     HAL_FDCAN_Stop(hfdcan);
+  58:BSP_DJI/Src/Task_Can.c ****     HAL_FDCAN_Start(hfdcan);
+  59:BSP_DJI/Src/Task_Can.c ****   }
+  60:BSP_DJI/Src/Task_Can.c **** }...
+  85              		.loc 1 60 1 view .LVU26
+  86 0024 0AB0     		add	sp, sp, #40
+  87              	.LCFI2:
+  88              		.cfi_remember_state
+  89              		.cfi_def_cfa_offset 8
+  90              		@ sp needed
+  91 0026 10BD     		pop	{r4, pc}
+  92              	.LVL4:
+  93              	.L4:
+  94              	.LCFI3:
+  95              		.cfi_restore_state
+  57:BSP_DJI/Src/Task_Can.c ****     HAL_FDCAN_Stop(hfdcan);
+  96              		.loc 1 57 5 is_stmt 1 view .LVU27
+  97 0028 2046     		mov	r0, r4
+  98 002a FFF7FEFF 		bl	HAL_FDCAN_Stop
+  99              	.LVL5:
+  58:BSP_DJI/Src/Task_Can.c ****     HAL_FDCAN_Start(hfdcan);
+ 100              		.loc 1 58 5 view .LVU28
+ 101 002e 2046     		mov	r0, r4
+ 102 0030 FFF7FEFF 		bl	HAL_FDCAN_Start
+ 103              	.LVL6:
+ 104              		.loc 1 60 1 is_stmt 0 view .LVU29
+ 105 0034 F6E7     		b	.L1
+ 106              		.cfi_endproc
+ 107              	.LFE151:
+ 109              		.section	.text.Task_CAN,"ax",%progbits
+ 110              		.align	1
+ 111              		.global	Task_CAN
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s 			page 4
+
+
+ 112              		.syntax unified
+ 113              		.thumb
+ 114              		.thumb_func
+ 116              	Task_CAN:
+ 117              	.LVL7:
+ 118              	.LFB150:
+  12:BSP_DJI/Src/Task_Can.c **** {
+ 119              		.loc 1 12 1 is_stmt 1 view -0
+ 120              		.cfi_startproc
+ 121              		@ Volatile: function does not return.
+ 122              		@ args = 0, pretend = 0, frame = 0
+ 123              		@ frame_needed = 0, uses_anonymous_args = 0
+  12:BSP_DJI/Src/Task_Can.c **** {
+ 124              		.loc 1 12 1 is_stmt 0 view .LVU31
+ 125 0000 08B5     		push	{r3, lr}
+ 126              	.LCFI4:
+ 127              		.cfi_def_cfa_offset 8
+ 128              		.cfi_offset 3, -8
+ 129              		.cfi_offset 14, -4
+  13:BSP_DJI/Src/Task_Can.c ****   (void)parameters;
+ 130              		.loc 1 13 3 is_stmt 1 view .LVU32
+  16:BSP_DJI/Src/Task_Can.c ****   CAN_Init(&hfdcan1);
+ 131              		.loc 1 16 3 view .LVU33
+ 132 0002 0B48     		ldr	r0, .L9
+ 133              	.LVL8:
+  16:BSP_DJI/Src/Task_Can.c ****   CAN_Init(&hfdcan1);
+ 134              		.loc 1 16 3 is_stmt 0 view .LVU34
+ 135 0004 FFF7FEFF 		bl	CAN_Init
+ 136              	.LVL9:
+ 137              	.L6:
+  20:BSP_DJI/Src/Task_Can.c ****   while (1)
+ 138              		.loc 1 20 3 is_stmt 1 view .LVU35
+  23:BSP_DJI/Src/Task_Can.c ****     if (xQueueReceive(Queue_CANSend, &CAN_Tx_Msg, portMAX_DELAY) != pdPASS)
+ 139              		.loc 1 23 5 view .LVU36
+  23:BSP_DJI/Src/Task_Can.c ****     if (xQueueReceive(Queue_CANSend, &CAN_Tx_Msg, portMAX_DELAY) != pdPASS)
+ 140              		.loc 1 23 9 is_stmt 0 view .LVU37
+ 141 0008 4FF0FF32 		mov	r2, #-1
+ 142 000c 0949     		ldr	r1, .L9+4
+ 143 000e 0A4B     		ldr	r3, .L9+8
+ 144 0010 1868     		ldr	r0, [r3]
+ 145 0012 FFF7FEFF 		bl	xQueueReceive
+ 146              	.LVL10:
+  23:BSP_DJI/Src/Task_Can.c ****     if (xQueueReceive(Queue_CANSend, &CAN_Tx_Msg, portMAX_DELAY) != pdPASS)
+ 147              		.loc 1 23 8 discriminator 1 view .LVU38
+ 148 0016 0128     		cmp	r0, #1
+ 149 0018 F6D1     		bne	.L6
+  27:BSP_DJI/Src/Task_Can.c ****     switch (CAN_Tx_Msg.CANx)
+ 150              		.loc 1 27 5 is_stmt 1 view .LVU39
+  27:BSP_DJI/Src/Task_Can.c ****     switch (CAN_Tx_Msg.CANx)
+ 151              		.loc 1 27 23 is_stmt 0 view .LVU40
+ 152 001a 064B     		ldr	r3, .L9+4
+ 153 001c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  27:BSP_DJI/Src/Task_Can.c ****     switch (CAN_Tx_Msg.CANx)
+ 154              		.loc 1 27 5 view .LVU41
+ 155 001e 012B     		cmp	r3, #1
+ 156 0020 F2D1     		bne	.L6
+  30:BSP_DJI/Src/Task_Can.c ****       CANTransmit(&hfdcan1, CAN_Tx_Msg.stdid, CAN_Tx_Msg.Data);
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s 			page 5
+
+
+ 157              		.loc 1 30 7 is_stmt 1 view .LVU42
+ 158 0022 064A     		ldr	r2, .L9+12
+ 159 0024 52F8041C 		ldr	r1, [r2, #-4]
+ 160 0028 0148     		ldr	r0, .L9
+ 161 002a FFF7FEFF 		bl	CANTransmit
+ 162              	.LVL11:
+  31:BSP_DJI/Src/Task_Can.c ****       break;
+ 163              		.loc 1 31 7 view .LVU43
+ 164 002e EBE7     		b	.L6
+ 165              	.L10:
+ 166              		.align	2
+ 167              	.L9:
+ 168 0030 00000000 		.word	hfdcan1
+ 169 0034 00000000 		.word	CAN_Tx_Msg
+ 170 0038 00000000 		.word	Queue_CANSend
+ 171 003c 08000000 		.word	CAN_Tx_Msg+8
+ 172              		.cfi_endproc
+ 173              	.LFE150:
+ 175              		.global	CAN_Tx_Msg
+ 176              		.section	.bss.CAN_Tx_Msg,"aw",%nobits
+ 177              		.align	2
+ 180              	CAN_Tx_Msg:
+ 181 0000 00000000 		.space	16
+ 181      00000000 
+ 181      00000000 
+ 181      00000000 
+ 182              		.text
+ 183              	.Letext0:
+ 184              		.file 2 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 185              		.file 3 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 186              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h"
+ 187              		.file 5 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h"
+ 188              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 189              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_fdcan.h"
+ 190              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 191              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 192              		.file 10 "BSP_DJI/INC/Task_Can.h"
+ 193              		.file 11 "BSP_DJI/INC/User_CAN.h"
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Task_Can.c
+C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s:20     .text.CANTransmit:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s:26     .text.CANTransmit:00000000 CANTransmit
+C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s:110    .text.Task_CAN:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s:116    .text.Task_CAN:00000000 Task_CAN
+C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s:168    .text.Task_CAN:00000030 $d
+C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s:180    .bss.CAN_Tx_Msg:00000000 CAN_Tx_Msg
+C:\Users\Lenovo\AppData\Local\Temp\ccZd70IL.s:177    .bss.CAN_Tx_Msg:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_FDCAN_AddMessageToTxFifoQ
+HAL_FDCAN_Stop
+HAL_FDCAN_Start
+CAN_Init
+xQueueReceive
+hfdcan1
+Queue_CANSend

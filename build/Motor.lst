@@ -1,0 +1,867 @@
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"Motor.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "BSP_DJI/Src/Motor.c"
+  19              		.section	.text.DM_ErrorCode_To_MotorErrorMask,"ax",%progbits
+  20              		.align	1
+  21              		.global	DM_ErrorCode_To_MotorErrorMask
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	DM_ErrorCode_To_MotorErrorMask:
+  27              	.LVL0:
+  28              	.LFB150:
+   1:BSP_DJI/Src/Motor.c **** /**Include Header Files**/
+   2:BSP_DJI/Src/Motor.c **** #include "Motor.h"
+   3:BSP_DJI/Src/Motor.c **** 
+   4:BSP_DJI/Src/Motor.c **** /**Function Delaration**/
+   5:BSP_DJI/Src/Motor.c **** /**
+   6:BSP_DJI/Src/Motor.c ****  * @brief  电机类型注册函数
+   7:BSP_DJI/Src/Motor.c ****  * @note   初始化电机结构体
+   8:BSP_DJI/Src/Motor.c ****  * @param  mot: 电机结构体；type: 电机类型；pospid：位置环pid；speedpid：速度环
+   9:BSP_DJI/Src/Motor.c ****  * @param  Reductionratio:减速比；Can_id：电机CAN通信id号
+  10:BSP_DJI/Src/Motor.c ****  * @retval 注册成功1 失败0
+  11:BSP_DJI/Src/Motor.c ****  */
+  12:BSP_DJI/Src/Motor.c ****  
+  13:BSP_DJI/Src/Motor.c **** 
+  14:BSP_DJI/Src/Motor.c **** uint8_t DM_ErrorCode_To_MotorErrorMask(uint8_t dm_err)
+  15:BSP_DJI/Src/Motor.c **** {
+  29              		.loc 1 15 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  16:BSP_DJI/Src/Motor.c ****     uint8_t err_mask = 0;
+  34              		.loc 1 16 5 view .LVU1
+  17:BSP_DJI/Src/Motor.c **** 
+  18:BSP_DJI/Src/Motor.c ****     switch (dm_err)
+  35              		.loc 1 18 5 view .LVU2
+  36 0000 0E28     		cmp	r0, #14
+  37 0002 19D8     		bhi	.L12
+  38 0004 DFE800F0 		tbb	[pc, r0]
+  39              	.L4:
+  40 0008 08       		.byte	(.L11-.L4)/2
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 2
+
+
+  41 0009 08       		.byte	(.L11-.L4)/2
+  42 000a 18       		.byte	(.L12-.L4)/2
+  43 000b 18       		.byte	(.L12-.L4)/2
+  44 000c 18       		.byte	(.L12-.L4)/2
+  45 000d 18       		.byte	(.L12-.L4)/2
+  46 000e 18       		.byte	(.L12-.L4)/2
+  47 000f 18       		.byte	(.L12-.L4)/2
+  48 0010 0A       		.byte	(.L10-.L4)/2
+  49 0011 0C       		.byte	(.L9-.L4)/2
+  50 0012 0E       		.byte	(.L8-.L4)/2
+  51 0013 10       		.byte	(.L7-.L4)/2
+  52 0014 12       		.byte	(.L6-.L4)/2
+  53 0015 14       		.byte	(.L5-.L4)/2
+  54 0016 16       		.byte	(.L3-.L4)/2
+  55 0017 00       		.p2align 1
+  56              	.L11:
+  57 0018 0020     		movs	r0, #0
+  58              	.LVL1:
+  59              		.loc 1 18 5 is_stmt 0 view .LVU3
+  60 001a 7047     		bx	lr
+  61              	.LVL2:
+  62              	.L10:
+  19:BSP_DJI/Src/Motor.c ****     {
+  20:BSP_DJI/Src/Motor.c ****     case 0x00:
+  21:BSP_DJI/Src/Motor.c ****     case 0x01:
+  22:BSP_DJI/Src/Motor.c ****         break;
+  23:BSP_DJI/Src/Motor.c **** 
+  24:BSP_DJI/Src/Motor.c ****     case 0x03:
+  25:BSP_DJI/Src/Motor.c ****     case 0x04:
+  26:BSP_DJI/Src/Motor.c ****     case 0x05:
+  27:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_SENSOR_CALIB_FAULT;
+  28:BSP_DJI/Src/Motor.c ****         break;
+  29:BSP_DJI/Src/Motor.c **** 
+  30:BSP_DJI/Src/Motor.c ****     case 0x08:
+  31:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVER_VOLTAGE;
+  63              		.loc 1 31 9 is_stmt 1 view .LVU4
+  32:BSP_DJI/Src/Motor.c ****         break;
+  64              		.loc 1 32 9 view .LVU5
+  31:BSP_DJI/Src/Motor.c ****         break;
+  65              		.loc 1 31 18 is_stmt 0 view .LVU6
+  66 001c 0220     		movs	r0, #2
+  67              	.LVL3:
+  68              		.loc 1 32 9 view .LVU7
+  69 001e 7047     		bx	lr
+  70              	.LVL4:
+  71              	.L9:
+  33:BSP_DJI/Src/Motor.c **** 
+  34:BSP_DJI/Src/Motor.c ****     case 0x09:
+  35:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_UNDER_VOLTAGE;
+  72              		.loc 1 35 9 is_stmt 1 view .LVU8
+  36:BSP_DJI/Src/Motor.c ****         break;
+  73              		.loc 1 36 9 view .LVU9
+  35:BSP_DJI/Src/Motor.c ****         break;
+  74              		.loc 1 35 18 is_stmt 0 view .LVU10
+  75 0020 0120     		movs	r0, #1
+  76              	.LVL5:
+  77              		.loc 1 36 9 view .LVU11
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 3
+
+
+  78 0022 7047     		bx	lr
+  79              	.LVL6:
+  80              	.L8:
+  37:BSP_DJI/Src/Motor.c **** 
+  38:BSP_DJI/Src/Motor.c ****     case 0x0A:
+  39:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVER_CURRENT;
+  81              		.loc 1 39 9 is_stmt 1 view .LVU12
+  40:BSP_DJI/Src/Motor.c ****         break;
+  82              		.loc 1 40 9 view .LVU13
+  39:BSP_DJI/Src/Motor.c ****         break;
+  83              		.loc 1 39 18 is_stmt 0 view .LVU14
+  84 0024 0420     		movs	r0, #4
+  85              	.LVL7:
+  86              		.loc 1 40 9 view .LVU15
+  87 0026 7047     		bx	lr
+  88              	.LVL8:
+  89              	.L7:
+  41:BSP_DJI/Src/Motor.c **** 
+  42:BSP_DJI/Src/Motor.c ****     case 0x0B:
+  43:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_DRIVER_OVER_TEMP;
+  90              		.loc 1 43 9 is_stmt 1 view .LVU16
+  44:BSP_DJI/Src/Motor.c ****         break;
+  91              		.loc 1 44 9 view .LVU17
+  43:BSP_DJI/Src/Motor.c ****         break;
+  92              		.loc 1 43 18 is_stmt 0 view .LVU18
+  93 0028 0820     		movs	r0, #8
+  94              	.LVL9:
+  95              		.loc 1 44 9 view .LVU19
+  96 002a 7047     		bx	lr
+  97              	.LVL10:
+  98              	.L6:
+  45:BSP_DJI/Src/Motor.c **** 
+  46:BSP_DJI/Src/Motor.c ****     case 0x0C:
+  47:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_MOTOR_OVER_TEMP;
+  99              		.loc 1 47 9 is_stmt 1 view .LVU20
+  48:BSP_DJI/Src/Motor.c ****         break;
+ 100              		.loc 1 48 9 view .LVU21
+  47:BSP_DJI/Src/Motor.c ****         break;
+ 101              		.loc 1 47 18 is_stmt 0 view .LVU22
+ 102 002c 1020     		movs	r0, #16
+ 103              	.LVL11:
+ 104              		.loc 1 48 9 view .LVU23
+ 105 002e 7047     		bx	lr
+ 106              	.LVL12:
+ 107              	.L5:
+  49:BSP_DJI/Src/Motor.c **** 
+  50:BSP_DJI/Src/Motor.c ****     case 0x0D:
+  51:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_COMM_LOST;
+ 108              		.loc 1 51 9 is_stmt 1 view .LVU24
+  52:BSP_DJI/Src/Motor.c ****         break;
+ 109              		.loc 1 52 9 view .LVU25
+  51:BSP_DJI/Src/Motor.c ****         break;
+ 110              		.loc 1 51 18 is_stmt 0 view .LVU26
+ 111 0030 2020     		movs	r0, #32
+ 112              	.LVL13:
+ 113              		.loc 1 52 9 view .LVU27
+ 114 0032 7047     		bx	lr
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 4
+
+
+ 115              	.LVL14:
+ 116              	.L3:
+  53:BSP_DJI/Src/Motor.c **** 
+  54:BSP_DJI/Src/Motor.c ****     case 0x0E:
+  55:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVERLOAD_STALL;
+ 117              		.loc 1 55 9 is_stmt 1 view .LVU28
+  56:BSP_DJI/Src/Motor.c ****         break;
+ 118              		.loc 1 56 9 view .LVU29
+  55:BSP_DJI/Src/Motor.c ****         break;
+ 119              		.loc 1 55 18 is_stmt 0 view .LVU30
+ 120 0034 4020     		movs	r0, #64
+ 121              	.LVL15:
+ 122              		.loc 1 56 9 view .LVU31
+ 123 0036 7047     		bx	lr
+ 124              	.LVL16:
+ 125              	.L12:
+  27:BSP_DJI/Src/Motor.c ****         break;
+ 126              		.loc 1 27 18 view .LVU32
+ 127 0038 8020     		movs	r0, #128
+ 128              	.LVL17:
+  57:BSP_DJI/Src/Motor.c **** 
+  58:BSP_DJI/Src/Motor.c ****     default:
+  59:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_SENSOR_CALIB_FAULT;
+  60:BSP_DJI/Src/Motor.c ****         break;
+  61:BSP_DJI/Src/Motor.c ****     }
+  62:BSP_DJI/Src/Motor.c **** 
+  63:BSP_DJI/Src/Motor.c ****     return err_mask;
+ 129              		.loc 1 63 5 is_stmt 1 view .LVU33
+  64:BSP_DJI/Src/Motor.c **** }
+ 130              		.loc 1 64 1 is_stmt 0 view .LVU34
+ 131 003a 7047     		bx	lr
+ 132              		.cfi_endproc
+ 133              	.LFE150:
+ 135              		.section	.text.LK_ErrorState_To_MotorErrorMask,"ax",%progbits
+ 136              		.align	1
+ 137              		.global	LK_ErrorState_To_MotorErrorMask
+ 138              		.syntax unified
+ 139              		.thumb
+ 140              		.thumb_func
+ 142              	LK_ErrorState_To_MotorErrorMask:
+ 143              	.LVL18:
+ 144              	.LFB151:
+  65:BSP_DJI/Src/Motor.c **** 
+  66:BSP_DJI/Src/Motor.c **** 
+  67:BSP_DJI/Src/Motor.c **** uint8_t LK_ErrorState_To_MotorErrorMask(uint8_t lk_errorState)
+  68:BSP_DJI/Src/Motor.c **** {
+ 145              		.loc 1 68 1 is_stmt 1 view -0
+ 146              		.cfi_startproc
+ 147              		@ args = 0, pretend = 0, frame = 0
+ 148              		@ frame_needed = 0, uses_anonymous_args = 0
+ 149              		@ link register save eliminated.
+ 150              		.loc 1 68 1 is_stmt 0 view .LVU36
+ 151 0000 0346     		mov	r3, r0
+  69:BSP_DJI/Src/Motor.c ****     uint8_t err_mask = 0;
+ 152              		.loc 1 69 5 is_stmt 1 view .LVU37
+ 153              	.LVL19:
+  70:BSP_DJI/Src/Motor.c **** 
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 5
+
+
+  71:BSP_DJI/Src/Motor.c ****     if (lk_errorState & (1u << 0))
+ 154              		.loc 1 71 5 view .LVU38
+ 155              		.loc 1 71 8 is_stmt 0 view .LVU39
+ 156 0002 10F00100 		ands	r0, r0, #1
+ 157              	.LVL20:
+ 158              		.loc 1 71 8 view .LVU40
+ 159 0006 00D0     		beq	.L14
+  72:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_UNDER_VOLTAGE;
+ 160              		.loc 1 72 18 view .LVU41
+ 161 0008 0120     		movs	r0, #1
+ 162              	.L14:
+ 163              	.LVL21:
+  73:BSP_DJI/Src/Motor.c **** 
+  74:BSP_DJI/Src/Motor.c ****     if (lk_errorState & (1u << 1))
+ 164              		.loc 1 74 5 is_stmt 1 view .LVU42
+ 165              		.loc 1 74 8 is_stmt 0 view .LVU43
+ 166 000a 13F0020F 		tst	r3, #2
+ 167 000e 01D0     		beq	.L15
+  75:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVER_VOLTAGE;
+ 168              		.loc 1 75 9 is_stmt 1 view .LVU44
+ 169              		.loc 1 75 18 is_stmt 0 view .LVU45
+ 170 0010 40F00200 		orr	r0, r0, #2
+ 171              	.LVL22:
+ 172              	.L15:
+  76:BSP_DJI/Src/Motor.c **** 
+  77:BSP_DJI/Src/Motor.c ****     if (lk_errorState & (1u << 2))
+ 173              		.loc 1 77 5 is_stmt 1 view .LVU46
+ 174              		.loc 1 77 8 is_stmt 0 view .LVU47
+ 175 0014 13F0040F 		tst	r3, #4
+ 176 0018 01D0     		beq	.L16
+  78:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_DRIVER_OVER_TEMP;
+ 177              		.loc 1 78 9 is_stmt 1 view .LVU48
+ 178              		.loc 1 78 18 is_stmt 0 view .LVU49
+ 179 001a 40F00800 		orr	r0, r0, #8
+ 180              	.LVL23:
+ 181              	.L16:
+  79:BSP_DJI/Src/Motor.c **** 
+  80:BSP_DJI/Src/Motor.c ****     if (lk_errorState & (1u << 3))
+ 182              		.loc 1 80 5 is_stmt 1 view .LVU50
+ 183              		.loc 1 80 8 is_stmt 0 view .LVU51
+ 184 001e 13F0080F 		tst	r3, #8
+ 185 0022 01D0     		beq	.L17
+  81:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_MOTOR_OVER_TEMP;
+ 186              		.loc 1 81 9 is_stmt 1 view .LVU52
+ 187              		.loc 1 81 18 is_stmt 0 view .LVU53
+ 188 0024 40F01000 		orr	r0, r0, #16
+ 189              	.LVL24:
+ 190              	.L17:
+  82:BSP_DJI/Src/Motor.c **** 
+  83:BSP_DJI/Src/Motor.c ****     if (lk_errorState & (1u << 4))
+ 191              		.loc 1 83 5 is_stmt 1 view .LVU54
+ 192              		.loc 1 83 8 is_stmt 0 view .LVU55
+ 193 0028 13F0100F 		tst	r3, #16
+ 194 002c 01D0     		beq	.L18
+  84:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVER_CURRENT;
+ 195              		.loc 1 84 9 is_stmt 1 view .LVU56
+ 196              		.loc 1 84 18 is_stmt 0 view .LVU57
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 6
+
+
+ 197 002e 40F00400 		orr	r0, r0, #4
+ 198              	.LVL25:
+ 199              	.L18:
+  85:BSP_DJI/Src/Motor.c **** 
+  86:BSP_DJI/Src/Motor.c ****     if (lk_errorState & (1u << 5))
+ 200              		.loc 1 86 5 is_stmt 1 view .LVU58
+ 201              		.loc 1 86 8 is_stmt 0 view .LVU59
+ 202 0032 13F0200F 		tst	r3, #32
+ 203 0036 01D0     		beq	.L19
+  87:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVER_CURRENT;
+ 204              		.loc 1 87 9 is_stmt 1 view .LVU60
+ 205              		.loc 1 87 18 is_stmt 0 view .LVU61
+ 206 0038 40F00400 		orr	r0, r0, #4
+ 207              	.LVL26:
+ 208              	.L19:
+  88:BSP_DJI/Src/Motor.c **** 
+  89:BSP_DJI/Src/Motor.c ****     if (lk_errorState & (1u << 6))
+ 209              		.loc 1 89 5 is_stmt 1 view .LVU62
+ 210              		.loc 1 89 8 is_stmt 0 view .LVU63
+ 211 003c 13F0400F 		tst	r3, #64
+ 212 0040 01D0     		beq	.L20
+  90:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVERLOAD_STALL;
+ 213              		.loc 1 90 9 is_stmt 1 view .LVU64
+ 214              		.loc 1 90 18 is_stmt 0 view .LVU65
+ 215 0042 40F04000 		orr	r0, r0, #64
+ 216              	.LVL27:
+ 217              	.L20:
+  91:BSP_DJI/Src/Motor.c **** 
+  92:BSP_DJI/Src/Motor.c ****     if (lk_errorState & (1u << 7))
+ 218              		.loc 1 92 5 is_stmt 1 view .LVU66
+ 219              		.loc 1 92 8 is_stmt 0 view .LVU67
+ 220 0046 13F0800F 		tst	r3, #128
+ 221 004a 00D1     		bne	.L23
+ 222              	.L21:
+  93:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_COMM_LOST;
+  94:BSP_DJI/Src/Motor.c **** 
+  95:BSP_DJI/Src/Motor.c ****     return err_mask;
+ 223              		.loc 1 95 5 is_stmt 1 view .LVU68
+  96:BSP_DJI/Src/Motor.c **** }
+ 224              		.loc 1 96 1 is_stmt 0 view .LVU69
+ 225 004c 7047     		bx	lr
+ 226              	.L23:
+  93:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_COMM_LOST;
+ 227              		.loc 1 93 9 is_stmt 1 view .LVU70
+  93:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_COMM_LOST;
+ 228              		.loc 1 93 18 is_stmt 0 view .LVU71
+ 229 004e 40F02000 		orr	r0, r0, #32
+ 230              	.LVL28:
+  93:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_COMM_LOST;
+ 231              		.loc 1 93 18 view .LVU72
+ 232 0052 FBE7     		b	.L21
+ 233              		.cfi_endproc
+ 234              	.LFE151:
+ 236              		.section	.text.RS_FaultValue_To_MotorErrorMask,"ax",%progbits
+ 237              		.align	1
+ 238              		.global	RS_FaultValue_To_MotorErrorMask
+ 239              		.syntax unified
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 7
+
+
+ 240              		.thumb
+ 241              		.thumb_func
+ 243              	RS_FaultValue_To_MotorErrorMask:
+ 244              	.LVL29:
+ 245              	.LFB152:
+  97:BSP_DJI/Src/Motor.c **** 
+  98:BSP_DJI/Src/Motor.c **** 
+  99:BSP_DJI/Src/Motor.c **** uint8_t RS_FaultValue_To_MotorErrorMask(uint32_t rs_fault)
+ 100:BSP_DJI/Src/Motor.c **** {
+ 246              		.loc 1 100 1 is_stmt 1 view -0
+ 247              		.cfi_startproc
+ 248              		@ args = 0, pretend = 0, frame = 0
+ 249              		@ frame_needed = 0, uses_anonymous_args = 0
+ 250              		@ link register save eliminated.
+ 251              		.loc 1 100 1 is_stmt 0 view .LVU74
+ 252 0000 0346     		mov	r3, r0
+ 101:BSP_DJI/Src/Motor.c ****     uint8_t err_mask = 0;
+ 253              		.loc 1 101 5 is_stmt 1 view .LVU75
+ 254              	.LVL30:
+ 102:BSP_DJI/Src/Motor.c **** 
+ 103:BSP_DJI/Src/Motor.c ****     if (rs_fault & RS_FAULT_UNDER_VOLTAGE)
+ 255              		.loc 1 103 5 view .LVU76
+ 256              		.loc 1 103 8 is_stmt 0 view .LVU77
+ 257 0002 10F0040F 		tst	r0, #4
+ 258 0006 1FD1     		bne	.L32
+ 101:BSP_DJI/Src/Motor.c ****     uint8_t err_mask = 0;
+ 259              		.loc 1 101 13 view .LVU78
+ 260 0008 0020     		movs	r0, #0
+ 261              	.LVL31:
+ 262              	.L25:
+ 104:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_UNDER_VOLTAGE;
+ 105:BSP_DJI/Src/Motor.c **** 
+ 106:BSP_DJI/Src/Motor.c ****     if (rs_fault & RS_FAULT_OVER_VOLTAGE)
+ 263              		.loc 1 106 5 is_stmt 1 view .LVU79
+ 264              		.loc 1 106 8 is_stmt 0 view .LVU80
+ 265 000a 13F0080F 		tst	r3, #8
+ 266 000e 01D0     		beq	.L26
+ 107:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVER_VOLTAGE;
+ 267              		.loc 1 107 9 is_stmt 1 view .LVU81
+ 268              		.loc 1 107 18 is_stmt 0 view .LVU82
+ 269 0010 40F00200 		orr	r0, r0, #2
+ 270              	.LVL32:
+ 271              	.L26:
+ 108:BSP_DJI/Src/Motor.c **** 
+ 109:BSP_DJI/Src/Motor.c ****     if (rs_fault & (RS_FAULT_PHASE_A_OVERCURRENT |
+ 272              		.loc 1 109 5 is_stmt 1 view .LVU83
+ 273              		.loc 1 109 18 is_stmt 0 view .LVU84
+ 274 0014 0D4A     		ldr	r2, .L33
+ 275 0016 1A40     		ands	r2, r2, r3
+ 276              		.loc 1 109 8 view .LVU85
+ 277 0018 0AB1     		cbz	r2, .L27
+ 110:BSP_DJI/Src/Motor.c ****                     RS_FAULT_PHASE_B_OVERCURRENT |
+ 111:BSP_DJI/Src/Motor.c ****                     RS_FAULT_PHASE_C_OVERCURRENT))
+ 112:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVER_CURRENT;
+ 278              		.loc 1 112 9 is_stmt 1 view .LVU86
+ 279              		.loc 1 112 18 is_stmt 0 view .LVU87
+ 280 001a 40F00400 		orr	r0, r0, #4
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 8
+
+
+ 281              	.LVL33:
+ 282              	.L27:
+ 113:BSP_DJI/Src/Motor.c **** 
+ 114:BSP_DJI/Src/Motor.c ****     if (rs_fault & RS_FAULT_DRIVER_CHIP)
+ 283              		.loc 1 114 5 is_stmt 1 view .LVU88
+ 284              		.loc 1 114 8 is_stmt 0 view .LVU89
+ 285 001e 13F0020F 		tst	r3, #2
+ 286 0022 01D0     		beq	.L28
+ 115:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_SENSOR_CALIB_FAULT;
+ 287              		.loc 1 115 9 is_stmt 1 view .LVU90
+ 288              		.loc 1 115 18 is_stmt 0 view .LVU91
+ 289 0024 40F08000 		orr	r0, r0, #128
+ 290              	.LVL34:
+ 291              	.L28:
+ 116:BSP_DJI/Src/Motor.c **** 
+ 117:BSP_DJI/Src/Motor.c ****     if (rs_fault & RS_FAULT_MOTOR_OVER_TEMP)
+ 292              		.loc 1 117 5 is_stmt 1 view .LVU92
+ 293              		.loc 1 117 8 is_stmt 0 view .LVU93
+ 294 0028 13F0010F 		tst	r3, #1
+ 295 002c 01D0     		beq	.L29
+ 118:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_MOTOR_OVER_TEMP;
+ 296              		.loc 1 118 9 is_stmt 1 view .LVU94
+ 297              		.loc 1 118 18 is_stmt 0 view .LVU95
+ 298 002e 40F01000 		orr	r0, r0, #16
+ 299              	.LVL35:
+ 300              	.L29:
+ 119:BSP_DJI/Src/Motor.c **** 
+ 120:BSP_DJI/Src/Motor.c ****     if (rs_fault & RS_FAULT_STALL_OVERLOAD)
+ 301              		.loc 1 120 5 is_stmt 1 view .LVU96
+ 302              		.loc 1 120 8 is_stmt 0 view .LVU97
+ 303 0032 13F4804F 		tst	r3, #16384
+ 304 0036 01D0     		beq	.L30
+ 121:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_OVERLOAD_STALL;
+ 305              		.loc 1 121 9 is_stmt 1 view .LVU98
+ 306              		.loc 1 121 18 is_stmt 0 view .LVU99
+ 307 0038 40F04000 		orr	r0, r0, #64
+ 308              	.LVL36:
+ 309              	.L30:
+ 122:BSP_DJI/Src/Motor.c **** 
+ 123:BSP_DJI/Src/Motor.c ****     if (rs_fault & (RS_FAULT_ENCODER_UNCALIBRATED |
+ 310              		.loc 1 123 5 is_stmt 1 view .LVU100
+ 311              		.loc 1 123 8 is_stmt 0 view .LVU101
+ 312 003c 13F4607F 		tst	r3, #896
+ 313 0040 01D0     		beq	.L31
+ 124:BSP_DJI/Src/Motor.c ****                     RS_FAULT_HARDWARE_IDENTIFY |
+ 125:BSP_DJI/Src/Motor.c ****                     RS_FAULT_POSITION_INIT))
+ 126:BSP_DJI/Src/Motor.c ****         err_mask |= MOTOR_ERR_SENSOR_CALIB_FAULT;
+ 314              		.loc 1 126 9 is_stmt 1 view .LVU102
+ 315              		.loc 1 126 18 is_stmt 0 view .LVU103
+ 316 0042 40F08000 		orr	r0, r0, #128
+ 317              	.LVL37:
+ 318              	.L31:
+ 127:BSP_DJI/Src/Motor.c **** 
+ 128:BSP_DJI/Src/Motor.c ****     return err_mask;
+ 319              		.loc 1 128 5 is_stmt 1 view .LVU104
+ 129:BSP_DJI/Src/Motor.c **** }
+ 320              		.loc 1 129 1 is_stmt 0 view .LVU105
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 9
+
+
+ 321 0046 7047     		bx	lr
+ 322              	.LVL38:
+ 323              	.L32:
+ 104:BSP_DJI/Src/Motor.c **** 
+ 324              		.loc 1 104 18 view .LVU106
+ 325 0048 0120     		movs	r0, #1
+ 326              	.LVL39:
+ 104:BSP_DJI/Src/Motor.c **** 
+ 327              		.loc 1 104 18 view .LVU107
+ 328 004a DEE7     		b	.L25
+ 329              	.L34:
+ 330              		.align	2
+ 331              	.L33:
+ 332 004c 30000100 		.word	65584
+ 333              		.cfi_endproc
+ 334              	.LFE152:
+ 336              		.section	.text.Motor_IsError,"ax",%progbits
+ 337              		.align	1
+ 338              		.global	Motor_IsError
+ 339              		.syntax unified
+ 340              		.thumb
+ 341              		.thumb_func
+ 343              	Motor_IsError:
+ 344              	.LVL40:
+ 345              	.LFB153:
+ 130:BSP_DJI/Src/Motor.c **** 
+ 131:BSP_DJI/Src/Motor.c **** 
+ 132:BSP_DJI/Src/Motor.c **** uint8_t Motor_IsError(motor_t *mot)
+ 133:BSP_DJI/Src/Motor.c **** {
+ 346              		.loc 1 133 1 is_stmt 1 view -0
+ 347              		.cfi_startproc
+ 348              		@ args = 0, pretend = 0, frame = 0
+ 349              		@ frame_needed = 0, uses_anonymous_args = 0
+ 350              		@ link register save eliminated.
+ 134:BSP_DJI/Src/Motor.c ****     if (mot == NULL)
+ 351              		.loc 1 134 5 view .LVU109
+ 352              		.loc 1 134 8 is_stmt 0 view .LVU110
+ 353 0000 20B1     		cbz	r0, .L37
+ 135:BSP_DJI/Src/Motor.c ****     {
+ 136:BSP_DJI/Src/Motor.c ****         return 0;
+ 137:BSP_DJI/Src/Motor.c ****     }
+ 138:BSP_DJI/Src/Motor.c **** 
+ 139:BSP_DJI/Src/Motor.c ****     return (mot->Error_id != 0) ? 1 : 0;
+ 354              		.loc 1 139 5 is_stmt 1 view .LVU111
+ 355              		.loc 1 139 16 is_stmt 0 view .LVU112
+ 356 0002 007A     		ldrb	r0, [r0, #8]	@ zero_extendqisi2
+ 357              	.LVL41:
+ 358              		.loc 1 139 37 view .LVU113
+ 359 0004 0038     		subs	r0, r0, #0
+ 360 0006 18BF     		it	ne
+ 361 0008 0120     		movne	r0, #1
+ 362 000a 7047     		bx	lr
+ 363              	.LVL42:
+ 364              	.L37:
+ 136:BSP_DJI/Src/Motor.c ****     }
+ 365              		.loc 1 136 16 view .LVU114
+ 366 000c 0020     		movs	r0, #0
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 10
+
+
+ 367              	.LVL43:
+ 140:BSP_DJI/Src/Motor.c **** }
+ 368              		.loc 1 140 1 view .LVU115
+ 369 000e 7047     		bx	lr
+ 370              		.cfi_endproc
+ 371              	.LFE153:
+ 373              		.section	.text.ArmMotor_ErrorStatePack_Get,"ax",%progbits
+ 374              		.align	1
+ 375              		.global	ArmMotor_ErrorStatePack_Get
+ 376              		.syntax unified
+ 377              		.thumb
+ 378              		.thumb_func
+ 380              	ArmMotor_ErrorStatePack_Get:
+ 381              	.LFB154:
+ 141:BSP_DJI/Src/Motor.c **** 
+ 142:BSP_DJI/Src/Motor.c **** 
+ 143:BSP_DJI/Src/Motor.c **** uint8_t ArmMotor_ErrorStatePack_Get(void)
+ 144:BSP_DJI/Src/Motor.c **** {
+ 382              		.loc 1 144 1 is_stmt 1 view -0
+ 383              		.cfi_startproc
+ 384              		@ args = 0, pretend = 0, frame = 0
+ 385              		@ frame_needed = 0, uses_anonymous_args = 0
+ 386              		@ link register save eliminated.
+ 145:BSP_DJI/Src/Motor.c ****     uint8_t error_pack = 0;
+ 387              		.loc 1 145 5 view .LVU117
+ 388              	.LVL44:
+ 146:BSP_DJI/Src/Motor.c ****     uint8_t motor_num = MNUM;
+ 389              		.loc 1 146 5 view .LVU118
+ 147:BSP_DJI/Src/Motor.c **** 
+ 148:BSP_DJI/Src/Motor.c ****     if (motor_num > MNUM)
+ 390              		.loc 1 148 5 view .LVU119
+ 149:BSP_DJI/Src/Motor.c ****     {
+ 150:BSP_DJI/Src/Motor.c ****         motor_num = MNUM;
+ 151:BSP_DJI/Src/Motor.c ****     }
+ 152:BSP_DJI/Src/Motor.c **** 
+ 153:BSP_DJI/Src/Motor.c ****     for (uint8_t i = 0; i < motor_num; i++)
+ 391              		.loc 1 153 5 view .LVU120
+ 392              	.LBB2:
+ 393              		.loc 1 153 10 view .LVU121
+ 394              		.loc 1 153 18 is_stmt 0 view .LVU122
+ 395 0000 0023     		movs	r3, #0
+ 396              	.LBE2:
+ 145:BSP_DJI/Src/Motor.c ****     uint8_t motor_num = MNUM;
+ 397              		.loc 1 145 13 view .LVU123
+ 398 0002 1846     		mov	r0, r3
+ 399              	.LBB3:
+ 400              		.loc 1 153 5 view .LVU124
+ 401 0004 01E0     		b	.L39
+ 402              	.LVL45:
+ 403              	.L40:
+ 404              		.loc 1 153 41 is_stmt 1 discriminator 2 view .LVU125
+ 405 0006 0133     		adds	r3, r3, #1
+ 406              	.LVL46:
+ 407              		.loc 1 153 41 is_stmt 0 discriminator 2 view .LVU126
+ 408 0008 DBB2     		uxtb	r3, r3
+ 409              	.LVL47:
+ 410              	.L39:
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 11
+
+
+ 411              		.loc 1 153 27 is_stmt 1 discriminator 1 view .LVU127
+ 412 000a 062B     		cmp	r3, #6
+ 413 000c 0BD8     		bhi	.L42
+ 154:BSP_DJI/Src/Motor.c ****     {
+ 155:BSP_DJI/Src/Motor.c ****         if (Arm_Motor[i].Error_id != 0)
+ 414              		.loc 1 155 9 view .LVU128
+ 415              		.loc 1 155 25 is_stmt 0 view .LVU129
+ 416 000e 064A     		ldr	r2, .L43
+ 417 0010 6821     		movs	r1, #104
+ 418 0012 01FB0322 		mla	r2, r1, r3, r2
+ 419 0016 127A     		ldrb	r2, [r2, #8]	@ zero_extendqisi2
+ 420              		.loc 1 155 12 view .LVU130
+ 421 0018 002A     		cmp	r2, #0
+ 422 001a F4D0     		beq	.L40
+ 156:BSP_DJI/Src/Motor.c ****         {
+ 157:BSP_DJI/Src/Motor.c ****             error_pack |= (1u << i);
+ 423              		.loc 1 157 13 is_stmt 1 view .LVU131
+ 424              		.loc 1 157 31 is_stmt 0 view .LVU132
+ 425 001c 0122     		movs	r2, #1
+ 426 001e 9A40     		lsls	r2, r2, r3
+ 427              		.loc 1 157 24 view .LVU133
+ 428 0020 1043     		orrs	r0, r0, r2
+ 429              	.LVL48:
+ 430              		.loc 1 157 24 view .LVU134
+ 431 0022 C0B2     		uxtb	r0, r0
+ 432              	.LVL49:
+ 433              		.loc 1 157 24 view .LVU135
+ 434 0024 EFE7     		b	.L40
+ 435              	.L42:
+ 436              		.loc 1 157 24 view .LVU136
+ 437              	.LBE3:
+ 158:BSP_DJI/Src/Motor.c ****         }
+ 159:BSP_DJI/Src/Motor.c ****     }
+ 160:BSP_DJI/Src/Motor.c **** 
+ 161:BSP_DJI/Src/Motor.c ****     return error_pack;
+ 438              		.loc 1 161 5 is_stmt 1 view .LVU137
+ 162:BSP_DJI/Src/Motor.c **** }
+ 439              		.loc 1 162 1 is_stmt 0 view .LVU138
+ 440 0026 7047     		bx	lr
+ 441              	.L44:
+ 442              		.align	2
+ 443              	.L43:
+ 444 0028 00000000 		.word	Arm_Motor
+ 445              		.cfi_endproc
+ 446              	.LFE154:
+ 448              		.section	.text.ArmMotor_ErrorMaskArray_Get,"ax",%progbits
+ 449              		.align	1
+ 450              		.global	ArmMotor_ErrorMaskArray_Get
+ 451              		.syntax unified
+ 452              		.thumb
+ 453              		.thumb_func
+ 455              	ArmMotor_ErrorMaskArray_Get:
+ 456              	.LVL50:
+ 457              	.LFB155:
+ 163:BSP_DJI/Src/Motor.c **** 
+ 164:BSP_DJI/Src/Motor.c **** 
+ 165:BSP_DJI/Src/Motor.c **** void ArmMotor_ErrorMaskArray_Get(uint8_t error_mask_array[7])
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 12
+
+
+ 166:BSP_DJI/Src/Motor.c **** {
+ 458              		.loc 1 166 1 is_stmt 1 view -0
+ 459              		.cfi_startproc
+ 460              		@ args = 0, pretend = 0, frame = 0
+ 461              		@ frame_needed = 0, uses_anonymous_args = 0
+ 462              		@ link register save eliminated.
+ 167:BSP_DJI/Src/Motor.c ****     if (error_mask_array == NULL)
+ 463              		.loc 1 167 5 view .LVU140
+ 464              		.loc 1 167 8 is_stmt 0 view .LVU141
+ 465 0000 8446     		mov	ip, r0
+ 466 0002 60B1     		cbz	r0, .L45
+ 467              	.LBB4:
+ 168:BSP_DJI/Src/Motor.c ****     {
+ 169:BSP_DJI/Src/Motor.c ****         return;
+ 170:BSP_DJI/Src/Motor.c ****     }
+ 171:BSP_DJI/Src/Motor.c **** 
+ 172:BSP_DJI/Src/Motor.c ****     for (uint8_t i = 0; i < 7; i++)
+ 468              		.loc 1 172 18 view .LVU142
+ 469 0004 0023     		movs	r3, #0
+ 470 0006 08E0     		b	.L47
+ 471              	.LVL51:
+ 472              	.L48:
+ 173:BSP_DJI/Src/Motor.c ****     {
+ 174:BSP_DJI/Src/Motor.c ****         error_mask_array[i] = Arm_Motor[i].Error_id;
+ 473              		.loc 1 174 9 is_stmt 1 view .LVU143
+ 474              		.loc 1 174 43 is_stmt 0 view .LVU144
+ 475 0008 054A     		ldr	r2, .L49
+ 476 000a 6821     		movs	r1, #104
+ 477 000c 01FB0322 		mla	r2, r1, r3, r2
+ 478 0010 127A     		ldrb	r2, [r2, #8]	@ zero_extendqisi2
+ 479              		.loc 1 174 29 view .LVU145
+ 480 0012 0CF80320 		strb	r2, [ip, r3]
+ 172:BSP_DJI/Src/Motor.c ****     {
+ 481              		.loc 1 172 33 is_stmt 1 discriminator 3 view .LVU146
+ 482 0016 0133     		adds	r3, r3, #1
+ 483              	.LVL52:
+ 172:BSP_DJI/Src/Motor.c ****     {
+ 484              		.loc 1 172 33 is_stmt 0 discriminator 3 view .LVU147
+ 485 0018 DBB2     		uxtb	r3, r3
+ 486              	.LVL53:
+ 487              	.L47:
+ 172:BSP_DJI/Src/Motor.c ****     {
+ 488              		.loc 1 172 27 is_stmt 1 discriminator 1 view .LVU148
+ 489 001a 062B     		cmp	r3, #6
+ 490 001c F4D9     		bls	.L48
+ 491              	.LVL54:
+ 492              	.L45:
+ 172:BSP_DJI/Src/Motor.c ****     {
+ 493              		.loc 1 172 27 is_stmt 0 discriminator 1 view .LVU149
+ 494              	.LBE4:
+ 175:BSP_DJI/Src/Motor.c ****     }
+ 176:BSP_DJI/Src/Motor.c **** }
+ 495              		.loc 1 176 1 view .LVU150
+ 496 001e 7047     		bx	lr
+ 497              	.L50:
+ 498              		.align	2
+ 499              	.L49:
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 13
+
+
+ 500 0020 00000000 		.word	Arm_Motor
+ 501              		.cfi_endproc
+ 502              	.LFE155:
+ 504              		.section	.text.MotortypeRegister,"ax",%progbits
+ 505              		.align	1
+ 506              		.global	MotortypeRegister
+ 507              		.syntax unified
+ 508              		.thumb
+ 509              		.thumb_func
+ 511              	MotortypeRegister:
+ 512              	.LVL55:
+ 513              	.LFB156:
+ 177:BSP_DJI/Src/Motor.c **** 
+ 178:BSP_DJI/Src/Motor.c **** 
+ 179:BSP_DJI/Src/Motor.c **** void MotortypeRegister(motor_t *mot,MotorDirection_t dir, motor_type type, pid_type *pospid, pid_ty
+ 180:BSP_DJI/Src/Motor.c **** {
+ 514              		.loc 1 180 1 is_stmt 1 view -0
+ 515              		.cfi_startproc
+ 516              		@ args = 16, pretend = 0, frame = 0
+ 517              		@ frame_needed = 0, uses_anonymous_args = 0
+ 518              		@ link register save eliminated.
+ 181:BSP_DJI/Src/Motor.c ****     if (mot != NULL)
+ 519              		.loc 1 181 5 view .LVU152
+ 520              		.loc 1 181 8 is_stmt 0 view .LVU153
+ 521 0000 8446     		mov	ip, r0
+ 522 0002 28B3     		cbz	r0, .L51
+ 182:BSP_DJI/Src/Motor.c ****     {
+ 183:BSP_DJI/Src/Motor.c ****         mot->id = Motor_id;
+ 523              		.loc 1 183 9 is_stmt 1 view .LVU154
+ 524              		.loc 1 183 17 is_stmt 0 view .LVU155
+ 525 0004 0298     		ldr	r0, [sp, #8]
+ 526              	.LVL56:
+ 527              		.loc 1 183 17 view .LVU156
+ 528 0006 CCF80400 		str	r0, [ip, #4]
+ 184:BSP_DJI/Src/Motor.c **** 				mot->CAN_ID=Can_id;
+ 529              		.loc 1 184 5 is_stmt 1 view .LVU157
+ 530              		.loc 1 184 16 is_stmt 0 view .LVU158
+ 531 000a 9DF80C00 		ldrb	r0, [sp, #12]	@ zero_extendqisi2
+ 532 000e 8CF80A00 		strb	r0, [ip, #10]
+ 185:BSP_DJI/Src/Motor.c ****         mot->type = type;
+ 533              		.loc 1 185 9 is_stmt 1 view .LVU159
+ 534              		.loc 1 185 19 is_stmt 0 view .LVU160
+ 535 0012 8CF80020 		strb	r2, [ip]
+ 186:BSP_DJI/Src/Motor.c **** 				mot->State=CLOSE;
+ 536              		.loc 1 186 5 is_stmt 1 view .LVU161
+ 537              		.loc 1 186 15 is_stmt 0 view .LVU162
+ 538 0016 0022     		movs	r2, #0
+ 539              	.LVL57:
+ 540              		.loc 1 186 15 view .LVU163
+ 541 0018 8CF80C20 		strb	r2, [ip, #12]
+ 187:BSP_DJI/Src/Motor.c **** 				mot->Online=OFFLINE;
+ 542              		.loc 1 187 5 is_stmt 1 view .LVU164
+ 543              		.loc 1 187 16 is_stmt 0 view .LVU165
+ 544 001c 8CF80B20 		strb	r2, [ip, #11]
+ 188:BSP_DJI/Src/Motor.c **** 				mot->Dir=dir;
+ 545              		.loc 1 188 5 is_stmt 1 view .LVU166
+ 546              		.loc 1 188 13 is_stmt 0 view .LVU167
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 14
+
+
+ 547 0020 8CF80D10 		strb	r1, [ip, #13]
+ 189:BSP_DJI/Src/Motor.c ****         mot->Reductionratio = Reductionratio;
+ 548              		.loc 1 189 9 is_stmt 1 view .LVU168
+ 549              		.loc 1 189 29 is_stmt 0 view .LVU169
+ 550 0024 9DF80420 		ldrb	r2, [sp, #4]	@ zero_extendqisi2
+ 551 0028 8CF82C20 		strb	r2, [ip, #44]
+ 190:BSP_DJI/Src/Motor.c ****         mot->PositionPID = pospid;
+ 552              		.loc 1 190 9 is_stmt 1 view .LVU170
+ 553              		.loc 1 190 26 is_stmt 0 view .LVU171
+ 554 002c CCF81030 		str	r3, [ip, #16]
+ 191:BSP_DJI/Src/Motor.c ****         mot->SpeedPID = speedpid;
+ 555              		.loc 1 191 9 is_stmt 1 view .LVU172
+ 556              		.loc 1 191 23 is_stmt 0 view .LVU173
+ 557 0030 009B     		ldr	r3, [sp]
+ 558              	.LVL58:
+ 559              		.loc 1 191 23 view .LVU174
+ 560 0032 CCF81430 		str	r3, [ip, #20]
+ 192:BSP_DJI/Src/Motor.c **** 	      mot->Kp=Kp;
+ 561              		.loc 1 192 8 is_stmt 1 view .LVU175
+ 562              		.loc 1 192 15 is_stmt 0 view .LVU176
+ 563 0036 8CED140A 		vstr.32	s0, [ip, #80]
+ 193:BSP_DJI/Src/Motor.c **** 				mot->Ki=Ki;
+ 564              		.loc 1 193 5 is_stmt 1 view .LVU177
+ 565              		.loc 1 193 12 is_stmt 0 view .LVU178
+ 566 003a CCED150A 		vstr.32	s1, [ip, #84]
+ 194:BSP_DJI/Src/Motor.c **** 			  mot->Kd=Kd;
+ 567              		.loc 1 194 6 is_stmt 1 view .LVU179
+ 568              		.loc 1 194 13 is_stmt 0 view .LVU180
+ 569 003e 8CED161A 		vstr.32	s2, [ip, #88]
+ 195:BSP_DJI/Src/Motor.c **** 			  mot->MAX_angle=MAX_angle;
+ 570              		.loc 1 195 6 is_stmt 1 view .LVU181
+ 571              		.loc 1 195 20 is_stmt 0 view .LVU182
+ 572 0042 CCED181A 		vstr.32	s3, [ip, #96]
+ 196:BSP_DJI/Src/Motor.c **** 			  mot->MIN_angle=MIN_angle;
+ 573              		.loc 1 196 6 is_stmt 1 view .LVU183
+ 574              		.loc 1 196 20 is_stmt 0 view .LVU184
+ 575 0046 8CED192A 		vstr.32	s4, [ip, #100]
+ 197:BSP_DJI/Src/Motor.c **** 				mot->SumError=0;
+ 576              		.loc 1 197 5 is_stmt 1 view .LVU185
+ 577              		.loc 1 197 18 is_stmt 0 view .LVU186
+ 578 004a 0023     		movs	r3, #0
+ 579 004c CCF85C30 		str	r3, [ip, #92]	@ float
+ 580              	.LVL59:
+ 581              	.L51:
+ 198:BSP_DJI/Src/Motor.c ****     }
+ 199:BSP_DJI/Src/Motor.c **** }
+ 582              		.loc 1 199 1 view .LVU187
+ 583 0050 7047     		bx	lr
+ 584              		.cfi_endproc
+ 585              	.LFE156:
+ 587              		.text
+ 588              	.Letext0:
+ 589              		.file 2 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 590              		.file 3 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 591              		.file 4 "BSP_DJI/INC/PID.h"
+ 592              		.file 5 "BSP_DJI/INC/Motor.h"
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Motor.c
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:20     .text.DM_ErrorCode_To_MotorErrorMask:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:26     .text.DM_ErrorCode_To_MotorErrorMask:00000000 DM_ErrorCode_To_MotorErrorMask
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:40     .text.DM_ErrorCode_To_MotorErrorMask:00000008 $d
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:136    .text.LK_ErrorState_To_MotorErrorMask:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:142    .text.LK_ErrorState_To_MotorErrorMask:00000000 LK_ErrorState_To_MotorErrorMask
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:237    .text.RS_FaultValue_To_MotorErrorMask:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:243    .text.RS_FaultValue_To_MotorErrorMask:00000000 RS_FaultValue_To_MotorErrorMask
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:332    .text.RS_FaultValue_To_MotorErrorMask:0000004c $d
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:337    .text.Motor_IsError:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:343    .text.Motor_IsError:00000000 Motor_IsError
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:374    .text.ArmMotor_ErrorStatePack_Get:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:380    .text.ArmMotor_ErrorStatePack_Get:00000000 ArmMotor_ErrorStatePack_Get
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:444    .text.ArmMotor_ErrorStatePack_Get:00000028 $d
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:449    .text.ArmMotor_ErrorMaskArray_Get:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:455    .text.ArmMotor_ErrorMaskArray_Get:00000000 ArmMotor_ErrorMaskArray_Get
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:500    .text.ArmMotor_ErrorMaskArray_Get:00000020 $d
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:505    .text.MotortypeRegister:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:511    .text.MotortypeRegister:00000000 MotortypeRegister
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:55     .text.DM_ErrorCode_To_MotorErrorMask:00000017 $d
+C:\Users\Lenovo\AppData\Local\Temp\ccbGMQ8j.s:55     .text.DM_ErrorCode_To_MotorErrorMask:00000018 $t
+
+UNDEFINED SYMBOLS
+Arm_Motor

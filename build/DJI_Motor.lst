@@ -1,0 +1,862 @@
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"DJI_Motor.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "BSP_DJI/Src/DJI_Motor.c"
+  19              		.section	.text.DJIMotor_AngleHandle,"ax",%progbits
+  20              		.align	1
+  21              		.global	DJIMotor_AngleHandle
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	DJIMotor_AngleHandle:
+  27              	.LVL0:
+  28              	.LFB151:
+   1:BSP_DJI/Src/DJI_Motor.c **** /**Include Header Files**/
+   2:BSP_DJI/Src/DJI_Motor.c **** #include "DJI_Motor.h"
+   3:BSP_DJI/Src/DJI_Motor.c **** 
+   4:BSP_DJI/Src/DJI_Motor.c **** /**Function Declaration**/
+   5:BSP_DJI/Src/DJI_Motor.c **** /**
+   6:BSP_DJI/Src/DJI_Motor.c ****  * @brief  Handle DJI Motor Parameter
+   7:BSP_DJI/Src/DJI_Motor.c ****  * @note
+   8:BSP_DJI/Src/DJI_Motor.c ****  * @param  mot, adata[]
+   9:BSP_DJI/Src/DJI_Motor.c ****  * @retval
+  10:BSP_DJI/Src/DJI_Motor.c ****  */
+  11:BSP_DJI/Src/DJI_Motor.c **** void DJIMotor_ParaHandle(motor_t *mot, uint8_t adata[])
+  12:BSP_DJI/Src/DJI_Motor.c **** {
+  13:BSP_DJI/Src/DJI_Motor.c ****     if (mot->type == MOTOR_3508 || mot->type == MOTOR_2006)
+  14:BSP_DJI/Src/DJI_Motor.c ****     {
+  15:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.FrameCounter++;
+  16:BSP_DJI/Src/DJI_Motor.c **** 
+  17:BSP_DJI/Src/DJI_Motor.c ****         if (mot->First_Frame == 1)
+  18:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+  19:BSP_DJI/Src/DJI_Motor.c **** 
+  20:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Mechanical_Angle[0] = (uint16_t)((adata[0] << 8) | adata[1]);
+  21:BSP_DJI/Src/DJI_Motor.c **** 
+  22:BSP_DJI/Src/DJI_Motor.c ****         if (mot->First_Frame == 0)
+  23:BSP_DJI/Src/DJI_Motor.c ****         {
+  24:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+  25:BSP_DJI/Src/DJI_Motor.c ****             mot->First_Frame = 1;
+  26:BSP_DJI/Src/DJI_Motor.c ****         }
+  27:BSP_DJI/Src/DJI_Motor.c **** 
+  28:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.RealSpeed = (int16_t)((adata[2] << 8) | adata[3]);
+  29:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+  30:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 2
+
+
+  31:BSP_DJI/Src/DJI_Motor.c **** 
+  32:BSP_DJI/Src/DJI_Motor.c ****         DJIMotor_AngleHandle(mot);
+  33:BSP_DJI/Src/DJI_Motor.c ****     }
+  34:BSP_DJI/Src/DJI_Motor.c ****     else if (mot->type == MOTOR_6020)
+  35:BSP_DJI/Src/DJI_Motor.c ****     {
+  36:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.FrameCounter++;
+  37:BSP_DJI/Src/DJI_Motor.c **** 
+  38:BSP_DJI/Src/DJI_Motor.c ****         if (mot->First_Frame == 1)
+  39:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+  40:BSP_DJI/Src/DJI_Motor.c **** 
+  41:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Mechanical_Angle[0] = (uint16_t)((adata[0] << 8) | adata[1]);
+  42:BSP_DJI/Src/DJI_Motor.c **** 
+  43:BSP_DJI/Src/DJI_Motor.c ****         if (mot->First_Frame == 0)
+  44:BSP_DJI/Src/DJI_Motor.c ****         {
+  45:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+  46:BSP_DJI/Src/DJI_Motor.c ****             mot->First_Frame = 1;
+  47:BSP_DJI/Src/DJI_Motor.c ****         }
+  48:BSP_DJI/Src/DJI_Motor.c **** 
+  49:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.RealSpeed = (int16_t)((adata[2] << 8) | adata[3]);
+  50:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+  51:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+  52:BSP_DJI/Src/DJI_Motor.c **** 
+  53:BSP_DJI/Src/DJI_Motor.c ****         DJIMotor_AngleHandle(mot);
+  54:BSP_DJI/Src/DJI_Motor.c ****     }
+  55:BSP_DJI/Src/DJI_Motor.c ****     else
+  56:BSP_DJI/Src/DJI_Motor.c ****         return;
+  57:BSP_DJI/Src/DJI_Motor.c **** }
+  58:BSP_DJI/Src/DJI_Motor.c **** 
+  59:BSP_DJI/Src/DJI_Motor.c **** /**
+  60:BSP_DJI/Src/DJI_Motor.c ****  * @brief  ���µ���ĽǶ��Լ�Ȧ��
+  61:BSP_DJI/Src/DJI_Motor.c ****  * @note   ���ڼ�����Ĵ��ڣ����ת��Ȧ��Ӧ�����תһȦ�
+  62:BSP_DJI/Src/DJI_Motor.c ****  * @param  mot: ��Ӧ����ṹ��ָ��
+  63:BSP_DJI/Src/DJI_Motor.c ****  * @retval -1��������㣻1��������㣻0 ���ޱ仯or����
+  64:BSP_DJI/Src/DJI_Motor.c ****  */
+  65:BSP_DJI/Src/DJI_Motor.c **** int8_t DJIMotor_AngleHandle(motor_t *mot)
+  66:BSP_DJI/Src/DJI_Motor.c **** {
+  29              		.loc 1 66 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  67:BSP_DJI/Src/DJI_Motor.c ****     if (mot->type == MOTOR_3508 || mot->type == MOTOR_2006)
+  34              		.loc 1 67 5 view .LVU1
+  35              		.loc 1 67 12 is_stmt 0 view .LVU2
+  36 0000 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
+  37              		.loc 1 67 33 view .LVU3
+  38 0002 531E     		subs	r3, r2, #1
+  39 0004 DBB2     		uxtb	r3, r3
+  40              		.loc 1 67 8 view .LVU4
+  41 0006 012B     		cmp	r3, #1
+  42 0008 1AD9     		bls	.L21
+  68:BSP_DJI/Src/DJI_Motor.c ****     {
+  69:BSP_DJI/Src/DJI_Motor.c ****         // �û�е��+�ٶ��жϹ���ķ�ʽ�����ף��������
+  70:BSP_DJI/Src/DJI_Motor.c ****         // �����ԣ�3508������ת��9000�����̴������
+  71:BSP_DJI/Src/DJI_Motor.c **** 
+  72:BSP_DJI/Src/DJI_Motor.c ****         /*���ݻ�е��Mechanical_Angle���㵱ǰת��ת��Ȧ��Oricirnum*/
+  73:BSP_DJI/Src/DJI_Motor.c ****         if (mot->FeedbackData.Mechanical_Angle[0] > 6700 && mot->FeedbackData.Mechanical_Angle[1] <
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 3
+
+
+  74:BSP_DJI/Src/DJI_Motor.c ****         {
+  75:BSP_DJI/Src/DJI_Motor.c ****             mot->Oricirnum -= 1;
+  76:BSP_DJI/Src/DJI_Motor.c ****             return -1;
+  77:BSP_DJI/Src/DJI_Motor.c ****         }
+  78:BSP_DJI/Src/DJI_Motor.c ****         else if (mot->FeedbackData.Mechanical_Angle[0] < 1500 && mot->FeedbackData.Mechanical_Angle
+  79:BSP_DJI/Src/DJI_Motor.c ****         {
+  80:BSP_DJI/Src/DJI_Motor.c ****             mot->Oricirnum += 1;
+  81:BSP_DJI/Src/DJI_Motor.c ****             return 1;
+  82:BSP_DJI/Src/DJI_Motor.c ****         }
+  83:BSP_DJI/Src/DJI_Motor.c **** 
+  84:BSP_DJI/Src/DJI_Motor.c ****         /*����Oricirnum����Realcirnum ���ݼ��ٱȵĶ��壬Oricirnum��
+  85:BSP_DJI/Src/DJI_Motor.c ****         while (mot->Oricirnum >= mot->Reductionratio)
+  86:BSP_DJI/Src/DJI_Motor.c ****         {
+  87:BSP_DJI/Src/DJI_Motor.c ****             mot->Oricirnum -= mot->Reductionratio;
+  88:BSP_DJI/Src/DJI_Motor.c ****             mot->Realcirnum += 1;
+  89:BSP_DJI/Src/DJI_Motor.c ****         }
+  90:BSP_DJI/Src/DJI_Motor.c **** 
+  91:BSP_DJI/Src/DJI_Motor.c ****         while (mot->Oricirnum < 0)
+  92:BSP_DJI/Src/DJI_Motor.c ****         {
+  93:BSP_DJI/Src/DJI_Motor.c ****             mot->Oricirnum += mot->Reductionratio;
+  94:BSP_DJI/Src/DJI_Motor.c ****             mot->Realcirnum -= 1;
+  95:BSP_DJI/Src/DJI_Motor.c ****         }
+  96:BSP_DJI/Src/DJI_Motor.c **** 
+  97:BSP_DJI/Src/DJI_Motor.c ****         /*���ݻ�е��Mechanical_Angle��ת��ת��Ȧ��Oricirnum����
+  98:BSP_DJI/Src/DJI_Motor.c ****         float tempAngle = ((float)(mot->Oricirnum) / (float)(mot->Reductionratio) * 360.0f) + Mecha
+  99:BSP_DJI/Src/DJI_Motor.c **** 
+ 100:BSP_DJI/Src/DJI_Motor.c ****         while (tempAngle >= 360)
+ 101:BSP_DJI/Src/DJI_Motor.c ****         {
+ 102:BSP_DJI/Src/DJI_Motor.c ****             tempAngle -= 360;
+ 103:BSP_DJI/Src/DJI_Motor.c ****         }
+ 104:BSP_DJI/Src/DJI_Motor.c **** 
+ 105:BSP_DJI/Src/DJI_Motor.c ****         while (tempAngle < 0)
+ 106:BSP_DJI/Src/DJI_Motor.c ****         {
+ 107:BSP_DJI/Src/DJI_Motor.c ****             tempAngle += 360;
+ 108:BSP_DJI/Src/DJI_Motor.c ****         }
+ 109:BSP_DJI/Src/DJI_Motor.c **** 
+ 110:BSP_DJI/Src/DJI_Motor.c ****         mot->RealAngle = tempAngle;
+ 111:BSP_DJI/Src/DJI_Motor.c ****         return 0;
+ 112:BSP_DJI/Src/DJI_Motor.c ****     }
+ 113:BSP_DJI/Src/DJI_Motor.c ****     else if (mot->type == MOTOR_6020)
+  43              		.loc 1 113 10 is_stmt 1 view .LVU5
+  44              		.loc 1 113 13 is_stmt 0 view .LVU6
+  45 000a 032A     		cmp	r2, #3
+  46 000c 40F0B780 		bne	.L20
+  47              	.LBB2:
+ 114:BSP_DJI/Src/DJI_Motor.c ****     {
+ 115:BSP_DJI/Src/DJI_Motor.c ****         /*6020Ȧ�����㣬���ڵ�����ٱ�Ϊ1������ֱ����
+ 116:BSP_DJI/Src/DJI_Motor.c ****         if (mot->FeedbackData.Mechanical_Angle[0] > 6700 && mot->FeedbackData.Mechanical_Angle[1] <
+  48              		.loc 1 116 9 is_stmt 1 view .LVU7
+  49              		.loc 1 116 47 is_stmt 0 view .LVU8
+  50 0010 C38C     		ldrh	r3, [r0, #38]
+  51              		.loc 1 116 12 view .LVU9
+  52 0012 41F62C22 		movw	r2, #6700
+  53 0016 9342     		cmp	r3, r2
+  54 0018 04D9     		bls	.L14
+  55              		.loc 1 116 95 discriminator 1 view .LVU10
+  56 001a 018D     		ldrh	r1, [r0, #40]
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 4
+
+
+  57              		.loc 1 116 58 discriminator 1 view .LVU11
+  58 001c 40F2DB52 		movw	r2, #1499
+  59 0020 9142     		cmp	r1, r2
+  60 0022 78D9     		bls	.L22
+  61              	.L14:
+ 117:BSP_DJI/Src/DJI_Motor.c ****         {
+ 118:BSP_DJI/Src/DJI_Motor.c ****             mot->Realcirnum -= 1;
+ 119:BSP_DJI/Src/DJI_Motor.c ****             return -1;
+ 120:BSP_DJI/Src/DJI_Motor.c ****         }
+ 121:BSP_DJI/Src/DJI_Motor.c ****         else if (mot->FeedbackData.Mechanical_Angle[0] < 1500 && mot->FeedbackData.Mechanical_Angle
+  62              		.loc 1 121 14 is_stmt 1 view .LVU12
+  63              		.loc 1 121 17 is_stmt 0 view .LVU13
+  64 0024 40F2DB52 		movw	r2, #1499
+  65 0028 9342     		cmp	r3, r2
+  66 002a 7AD8     		bhi	.L15
+  67              		.loc 1 121 100 discriminator 1 view .LVU14
+  68 002c 018D     		ldrh	r1, [r0, #40]
+  69              		.loc 1 121 63 discriminator 1 view .LVU15
+  70 002e 41F62C22 		movw	r2, #6700
+  71 0032 9142     		cmp	r1, r2
+  72 0034 75D9     		bls	.L15
+ 122:BSP_DJI/Src/DJI_Motor.c ****         {
+ 123:BSP_DJI/Src/DJI_Motor.c ****             mot->Realcirnum += 1;
+  73              		.loc 1 123 13 is_stmt 1 view .LVU16
+  74              		.loc 1 123 16 is_stmt 0 view .LVU17
+  75 0036 038E     		ldrh	r3, [r0, #48]
+  76              		.loc 1 123 29 view .LVU18
+  77 0038 0133     		adds	r3, r3, #1
+  78 003a 0386     		strh	r3, [r0, #48]	@ movhi
+ 124:BSP_DJI/Src/DJI_Motor.c ****             return 1;
+  79              		.loc 1 124 13 is_stmt 1 view .LVU19
+  80              		.loc 1 124 20 is_stmt 0 view .LVU20
+  81 003c 0120     		movs	r0, #1
+  82              	.LVL1:
+  83              		.loc 1 124 20 view .LVU21
+  84 003e 7047     		bx	lr
+  85              	.LVL2:
+  86              	.L21:
+  87              		.loc 1 124 20 view .LVU22
+  88              	.LBE2:
+  89              	.LBB3:
+  73:BSP_DJI/Src/DJI_Motor.c ****         {
+  90              		.loc 1 73 9 is_stmt 1 view .LVU23
+  73:BSP_DJI/Src/DJI_Motor.c ****         {
+  91              		.loc 1 73 47 is_stmt 0 view .LVU24
+  92 0040 C18C     		ldrh	r1, [r0, #38]
+  73:BSP_DJI/Src/DJI_Motor.c ****         {
+  93              		.loc 1 73 12 view .LVU25
+  94 0042 41F62C23 		movw	r3, #6700
+  95 0046 9942     		cmp	r1, r3
+  96 0048 04D9     		bls	.L3
+  73:BSP_DJI/Src/DJI_Motor.c ****         {
+  97              		.loc 1 73 95 discriminator 1 view .LVU26
+  98 004a 028D     		ldrh	r2, [r0, #40]
+  73:BSP_DJI/Src/DJI_Motor.c ****         {
+  99              		.loc 1 73 58 discriminator 1 view .LVU27
+ 100 004c 40F2DB53 		movw	r3, #1499
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 5
+
+
+ 101 0050 9A42     		cmp	r2, r3
+ 102 0052 0DD9     		bls	.L23
+ 103              	.L3:
+  78:BSP_DJI/Src/DJI_Motor.c ****         {
+ 104              		.loc 1 78 14 is_stmt 1 view .LVU28
+  78:BSP_DJI/Src/DJI_Motor.c ****         {
+ 105              		.loc 1 78 17 is_stmt 0 view .LVU29
+ 106 0054 40F2DB53 		movw	r3, #1499
+ 107 0058 9942     		cmp	r1, r3
+ 108 005a 15D8     		bhi	.L6
+  78:BSP_DJI/Src/DJI_Motor.c ****         {
+ 109              		.loc 1 78 100 discriminator 1 view .LVU30
+ 110 005c 028D     		ldrh	r2, [r0, #40]
+  78:BSP_DJI/Src/DJI_Motor.c ****         {
+ 111              		.loc 1 78 63 discriminator 1 view .LVU31
+ 112 005e 41F62C23 		movw	r3, #6700
+ 113 0062 9A42     		cmp	r2, r3
+ 114 0064 10D9     		bls	.L6
+  80:BSP_DJI/Src/DJI_Motor.c ****             return 1;
+ 115              		.loc 1 80 13 is_stmt 1 view .LVU32
+  80:BSP_DJI/Src/DJI_Motor.c ****             return 1;
+ 116              		.loc 1 80 16 is_stmt 0 view .LVU33
+ 117 0066 C38D     		ldrh	r3, [r0, #46]
+  80:BSP_DJI/Src/DJI_Motor.c ****             return 1;
+ 118              		.loc 1 80 28 view .LVU34
+ 119 0068 0133     		adds	r3, r3, #1
+ 120 006a C385     		strh	r3, [r0, #46]	@ movhi
+  81:BSP_DJI/Src/DJI_Motor.c ****         }
+ 121              		.loc 1 81 13 is_stmt 1 view .LVU35
+  81:BSP_DJI/Src/DJI_Motor.c ****         }
+ 122              		.loc 1 81 20 is_stmt 0 view .LVU36
+ 123 006c 0120     		movs	r0, #1
+ 124              	.LVL3:
+  81:BSP_DJI/Src/DJI_Motor.c ****         }
+ 125              		.loc 1 81 20 view .LVU37
+ 126 006e 7047     		bx	lr
+ 127              	.LVL4:
+ 128              	.L23:
+  75:BSP_DJI/Src/DJI_Motor.c ****             return -1;
+ 129              		.loc 1 75 13 is_stmt 1 view .LVU38
+  75:BSP_DJI/Src/DJI_Motor.c ****             return -1;
+ 130              		.loc 1 75 16 is_stmt 0 view .LVU39
+ 131 0070 C38D     		ldrh	r3, [r0, #46]
+  75:BSP_DJI/Src/DJI_Motor.c ****             return -1;
+ 132              		.loc 1 75 28 view .LVU40
+ 133 0072 013B     		subs	r3, r3, #1
+ 134 0074 C385     		strh	r3, [r0, #46]	@ movhi
+  76:BSP_DJI/Src/DJI_Motor.c ****         }
+ 135              		.loc 1 76 13 is_stmt 1 view .LVU41
+  76:BSP_DJI/Src/DJI_Motor.c ****         }
+ 136              		.loc 1 76 20 is_stmt 0 view .LVU42
+ 137 0076 4FF0FF30 		mov	r0, #-1
+ 138              	.LVL5:
+  76:BSP_DJI/Src/DJI_Motor.c ****         }
+ 139              		.loc 1 76 20 view .LVU43
+ 140 007a 7047     		bx	lr
+ 141              	.LVL6:
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 6
+
+
+ 142              	.L7:
+  87:BSP_DJI/Src/DJI_Motor.c ****             mot->Realcirnum += 1;
+ 143              		.loc 1 87 13 is_stmt 1 view .LVU44
+  87:BSP_DJI/Src/DJI_Motor.c ****             mot->Realcirnum += 1;
+ 144              		.loc 1 87 16 is_stmt 0 view .LVU45
+ 145 007c 9BB2     		uxth	r3, r3
+  87:BSP_DJI/Src/DJI_Motor.c ****             mot->Realcirnum += 1;
+ 146              		.loc 1 87 28 view .LVU46
+ 147 007e 9B1A     		subs	r3, r3, r2
+ 148 0080 C385     		strh	r3, [r0, #46]	@ movhi
+  88:BSP_DJI/Src/DJI_Motor.c ****         }
+ 149              		.loc 1 88 13 is_stmt 1 view .LVU47
+  88:BSP_DJI/Src/DJI_Motor.c ****         }
+ 150              		.loc 1 88 16 is_stmt 0 view .LVU48
+ 151 0082 038E     		ldrh	r3, [r0, #48]
+  88:BSP_DJI/Src/DJI_Motor.c ****         }
+ 152              		.loc 1 88 29 view .LVU49
+ 153 0084 0133     		adds	r3, r3, #1
+ 154 0086 0386     		strh	r3, [r0, #48]	@ movhi
+ 155              	.L6:
+  85:BSP_DJI/Src/DJI_Motor.c ****         {
+ 156              		.loc 1 85 31 is_stmt 1 view .LVU50
+  85:BSP_DJI/Src/DJI_Motor.c ****         {
+ 157              		.loc 1 85 19 is_stmt 0 view .LVU51
+ 158 0088 B0F92E30 		ldrsh	r3, [r0, #46]
+  85:BSP_DJI/Src/DJI_Motor.c ****         {
+ 159              		.loc 1 85 37 view .LVU52
+ 160 008c 90F82C20 		ldrb	r2, [r0, #44]	@ zero_extendqisi2
+  85:BSP_DJI/Src/DJI_Motor.c ****         {
+ 161              		.loc 1 85 31 view .LVU53
+ 162 0090 9342     		cmp	r3, r2
+ 163 0092 F3DA     		bge	.L7
+ 164 0094 05E0     		b	.L8
+ 165              	.L9:
+  93:BSP_DJI/Src/DJI_Motor.c ****             mot->Realcirnum -= 1;
+ 166              		.loc 1 93 13 is_stmt 1 view .LVU54
+  93:BSP_DJI/Src/DJI_Motor.c ****             mot->Realcirnum -= 1;
+ 167              		.loc 1 93 28 is_stmt 0 view .LVU55
+ 168 0096 12FA83F3 		uxtah	r3, r2, r3
+ 169 009a C385     		strh	r3, [r0, #46]	@ movhi
+  94:BSP_DJI/Src/DJI_Motor.c ****         }
+ 170              		.loc 1 94 13 is_stmt 1 view .LVU56
+  94:BSP_DJI/Src/DJI_Motor.c ****         }
+ 171              		.loc 1 94 16 is_stmt 0 view .LVU57
+ 172 009c 038E     		ldrh	r3, [r0, #48]
+  94:BSP_DJI/Src/DJI_Motor.c ****         }
+ 173              		.loc 1 94 29 view .LVU58
+ 174 009e 013B     		subs	r3, r3, #1
+ 175 00a0 0386     		strh	r3, [r0, #48]	@ movhi
+ 176              	.L8:
+  91:BSP_DJI/Src/DJI_Motor.c ****         {
+ 177              		.loc 1 91 31 is_stmt 1 view .LVU59
+  91:BSP_DJI/Src/DJI_Motor.c ****         {
+ 178              		.loc 1 91 19 is_stmt 0 view .LVU60
+ 179 00a2 B0F92E30 		ldrsh	r3, [r0, #46]
+  91:BSP_DJI/Src/DJI_Motor.c ****         {
+ 180              		.loc 1 91 31 view .LVU61
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 7
+
+
+ 181 00a6 002B     		cmp	r3, #0
+ 182 00a8 F5DB     		blt	.L9
+  98:BSP_DJI/Src/DJI_Motor.c **** 
+ 183              		.loc 1 98 9 is_stmt 1 view .LVU62
+  98:BSP_DJI/Src/DJI_Motor.c **** 
+ 184              		.loc 1 98 28 is_stmt 0 view .LVU63
+ 185 00aa 07EE903A 		vmov	s15, r3	@ int
+ 186 00ae B8EEE77A 		vcvt.f32.s32	s14, s15
+  98:BSP_DJI/Src/DJI_Motor.c **** 
+ 187              		.loc 1 98 54 view .LVU64
+ 188 00b2 07EE902A 		vmov	s15, r2	@ int
+ 189 00b6 F8EE676A 		vcvt.f32.u32	s13, s15
+  98:BSP_DJI/Src/DJI_Motor.c **** 
+ 190              		.loc 1 98 52 view .LVU65
+ 191 00ba C7EE267A 		vdiv.f32	s15, s14, s13
+  98:BSP_DJI/Src/DJI_Motor.c **** 
+ 192              		.loc 1 98 83 view .LVU66
+ 193 00be DFED315A 		vldr.32	s11, .L24
+ 194 00c2 67EEA57A 		vmul.f32	s15, s15, s11
+  98:BSP_DJI/Src/DJI_Motor.c **** 
+ 195              		.loc 1 98 95 view .LVU67
+ 196 00c6 07EE101A 		vmov	s14, r1	@ int
+ 197 00ca B8EEC77A 		vcvt.f32.s32	s14, s14
+ 198 00ce 9FED2E5A 		vldr.32	s10, .L24+4
+ 199 00d2 87EE056A 		vdiv.f32	s12, s14, s10
+ 200 00d6 26EE257A 		vmul.f32	s14, s12, s11
+  98:BSP_DJI/Src/DJI_Motor.c **** 
+ 201              		.loc 1 98 160 view .LVU68
+ 202 00da 87EE266A 		vdiv.f32	s12, s14, s13
+  98:BSP_DJI/Src/DJI_Motor.c **** 
+ 203              		.loc 1 98 15 view .LVU69
+ 204 00de 77EE867A 		vadd.f32	s15, s15, s12
+ 205              	.LVL7:
+ 100:BSP_DJI/Src/DJI_Motor.c ****         {
+ 206              		.loc 1 100 9 is_stmt 1 view .LVU70
+ 100:BSP_DJI/Src/DJI_Motor.c ****         {
+ 207              		.loc 1 100 15 is_stmt 0 view .LVU71
+ 208 00e2 03E0     		b	.L10
+ 209              	.L11:
+ 102:BSP_DJI/Src/DJI_Motor.c ****         }
+ 210              		.loc 1 102 13 is_stmt 1 view .LVU72
+ 102:BSP_DJI/Src/DJI_Motor.c ****         }
+ 211              		.loc 1 102 23 is_stmt 0 view .LVU73
+ 212 00e4 9FED277A 		vldr.32	s14, .L24
+ 213 00e8 77EEC77A 		vsub.f32	s15, s15, s14
+ 214              	.LVL8:
+ 215              	.L10:
+ 100:BSP_DJI/Src/DJI_Motor.c ****         {
+ 216              		.loc 1 100 26 is_stmt 1 view .LVU74
+ 217 00ec 9FED257A 		vldr.32	s14, .L24
+ 218 00f0 F4EEC77A 		vcmpe.f32	s15, s14
+ 219 00f4 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 220 00f8 F4DA     		bge	.L11
+ 100:BSP_DJI/Src/DJI_Motor.c ****         {
+ 221              		.loc 1 100 26 is_stmt 0 view .LVU75
+ 222 00fa 03E0     		b	.L12
+ 223              	.L13:
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 8
+
+
+ 107:BSP_DJI/Src/DJI_Motor.c ****         }
+ 224              		.loc 1 107 13 is_stmt 1 view .LVU76
+ 107:BSP_DJI/Src/DJI_Motor.c ****         }
+ 225              		.loc 1 107 23 is_stmt 0 view .LVU77
+ 226 00fc 9FED217A 		vldr.32	s14, .L24
+ 227 0100 77EE877A 		vadd.f32	s15, s15, s14
+ 228              	.LVL9:
+ 229              	.L12:
+ 105:BSP_DJI/Src/DJI_Motor.c ****         {
+ 230              		.loc 1 105 26 is_stmt 1 view .LVU78
+ 231 0104 F5EEC07A 		vcmpe.f32	s15, #0
+ 232 0108 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 233 010c F6D4     		bmi	.L13
+ 110:BSP_DJI/Src/DJI_Motor.c ****         return 0;
+ 234              		.loc 1 110 9 view .LVU79
+ 110:BSP_DJI/Src/DJI_Motor.c ****         return 0;
+ 235              		.loc 1 110 24 is_stmt 0 view .LVU80
+ 236 010e C0ED107A 		vstr.32	s15, [r0, #64]
+ 111:BSP_DJI/Src/DJI_Motor.c ****     }
+ 237              		.loc 1 111 9 is_stmt 1 view .LVU81
+ 111:BSP_DJI/Src/DJI_Motor.c ****     }
+ 238              		.loc 1 111 16 is_stmt 0 view .LVU82
+ 239 0112 0020     		movs	r0, #0
+ 240              	.LVL10:
+ 111:BSP_DJI/Src/DJI_Motor.c ****     }
+ 241              		.loc 1 111 16 view .LVU83
+ 242 0114 7047     		bx	lr
+ 243              	.LVL11:
+ 244              	.L22:
+ 111:BSP_DJI/Src/DJI_Motor.c ****     }
+ 245              		.loc 1 111 16 view .LVU84
+ 246              	.LBE3:
+ 247              	.LBB4:
+ 118:BSP_DJI/Src/DJI_Motor.c ****             return -1;
+ 248              		.loc 1 118 13 is_stmt 1 view .LVU85
+ 118:BSP_DJI/Src/DJI_Motor.c ****             return -1;
+ 249              		.loc 1 118 16 is_stmt 0 view .LVU86
+ 250 0116 038E     		ldrh	r3, [r0, #48]
+ 118:BSP_DJI/Src/DJI_Motor.c ****             return -1;
+ 251              		.loc 1 118 29 view .LVU87
+ 252 0118 013B     		subs	r3, r3, #1
+ 253 011a 0386     		strh	r3, [r0, #48]	@ movhi
+ 119:BSP_DJI/Src/DJI_Motor.c ****         }
+ 254              		.loc 1 119 13 is_stmt 1 view .LVU88
+ 119:BSP_DJI/Src/DJI_Motor.c ****         }
+ 255              		.loc 1 119 20 is_stmt 0 view .LVU89
+ 256 011c 4FF0FF30 		mov	r0, #-1
+ 257              	.LVL12:
+ 119:BSP_DJI/Src/DJI_Motor.c ****         }
+ 258              		.loc 1 119 20 view .LVU90
+ 259 0120 7047     		bx	lr
+ 260              	.LVL13:
+ 261              	.L15:
+ 125:BSP_DJI/Src/DJI_Motor.c ****         }
+ 126:BSP_DJI/Src/DJI_Motor.c **** 
+ 127:BSP_DJI/Src/DJI_Motor.c ****         /*6020�ǶȽ��㣬��Χ��0~360*/
+ 128:BSP_DJI/Src/DJI_Motor.c ****         float tempAngle = MechanicalAngle2RealAngle(mot->FeedbackData.Mechanical_Angle[0]) / (float
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 9
+
+
+ 262              		.loc 1 128 9 is_stmt 1 view .LVU91
+ 263              		.loc 1 128 27 is_stmt 0 view .LVU92
+ 264 0122 07EE903A 		vmov	s15, r3	@ int
+ 265 0126 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 266 012a 9FED177A 		vldr.32	s14, .L24+4
+ 267 012e C7EE876A 		vdiv.f32	s13, s15, s14
+ 268 0132 DFED147A 		vldr.32	s15, .L24
+ 269 0136 66EEA76A 		vmul.f32	s13, s13, s15
+ 270              		.loc 1 128 105 view .LVU93
+ 271 013a 90F82C30 		ldrb	r3, [r0, #44]	@ zero_extendqisi2
+ 272 013e 07EE103A 		vmov	s14, r3	@ int
+ 273              		.loc 1 128 94 view .LVU94
+ 274 0142 B8EE477A 		vcvt.f32.u32	s14, s14
+ 275              		.loc 1 128 15 view .LVU95
+ 276 0146 C6EE877A 		vdiv.f32	s15, s13, s14
+ 277              	.LVL14:
+ 129:BSP_DJI/Src/DJI_Motor.c **** 
+ 130:BSP_DJI/Src/DJI_Motor.c ****         while (tempAngle >= 360)
+ 278              		.loc 1 130 9 is_stmt 1 view .LVU96
+ 279              		.loc 1 130 15 is_stmt 0 view .LVU97
+ 280 014a 03E0     		b	.L16
+ 281              	.L17:
+ 131:BSP_DJI/Src/DJI_Motor.c ****         {
+ 132:BSP_DJI/Src/DJI_Motor.c ****             tempAngle -= 360;
+ 282              		.loc 1 132 13 is_stmt 1 view .LVU98
+ 283              		.loc 1 132 23 is_stmt 0 view .LVU99
+ 284 014c 9FED0D7A 		vldr.32	s14, .L24
+ 285 0150 77EEC77A 		vsub.f32	s15, s15, s14
+ 286              	.LVL15:
+ 287              	.L16:
+ 130:BSP_DJI/Src/DJI_Motor.c ****         {
+ 288              		.loc 1 130 26 is_stmt 1 view .LVU100
+ 289 0154 9FED0B7A 		vldr.32	s14, .L24
+ 290 0158 F4EEC77A 		vcmpe.f32	s15, s14
+ 291 015c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 292 0160 F4DA     		bge	.L17
+ 130:BSP_DJI/Src/DJI_Motor.c ****         {
+ 293              		.loc 1 130 26 is_stmt 0 view .LVU101
+ 294 0162 03E0     		b	.L18
+ 295              	.L19:
+ 133:BSP_DJI/Src/DJI_Motor.c ****         }
+ 134:BSP_DJI/Src/DJI_Motor.c **** 
+ 135:BSP_DJI/Src/DJI_Motor.c ****         while (tempAngle < 0)
+ 136:BSP_DJI/Src/DJI_Motor.c ****         {
+ 137:BSP_DJI/Src/DJI_Motor.c ****             tempAngle += 360;
+ 296              		.loc 1 137 13 is_stmt 1 view .LVU102
+ 297              		.loc 1 137 23 is_stmt 0 view .LVU103
+ 298 0164 9FED077A 		vldr.32	s14, .L24
+ 299 0168 77EE877A 		vadd.f32	s15, s15, s14
+ 300              	.LVL16:
+ 301              	.L18:
+ 135:BSP_DJI/Src/DJI_Motor.c ****         {
+ 302              		.loc 1 135 26 is_stmt 1 view .LVU104
+ 303 016c F5EEC07A 		vcmpe.f32	s15, #0
+ 304 0170 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 305 0174 F6D4     		bmi	.L19
+ 138:BSP_DJI/Src/DJI_Motor.c ****         }
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 10
+
+
+ 139:BSP_DJI/Src/DJI_Motor.c **** 
+ 140:BSP_DJI/Src/DJI_Motor.c ****         mot->RealAngle = tempAngle;
+ 306              		.loc 1 140 9 view .LVU105
+ 307              		.loc 1 140 24 is_stmt 0 view .LVU106
+ 308 0176 C0ED107A 		vstr.32	s15, [r0, #64]
+ 141:BSP_DJI/Src/DJI_Motor.c ****         return 0;
+ 309              		.loc 1 141 9 is_stmt 1 view .LVU107
+ 310              		.loc 1 141 16 is_stmt 0 view .LVU108
+ 311 017a 0020     		movs	r0, #0
+ 312              	.LVL17:
+ 313              		.loc 1 141 16 view .LVU109
+ 314 017c 7047     		bx	lr
+ 315              	.LVL18:
+ 316              	.L20:
+ 317              		.loc 1 141 16 view .LVU110
+ 318              	.LBE4:
+ 142:BSP_DJI/Src/DJI_Motor.c ****     }
+ 143:BSP_DJI/Src/DJI_Motor.c ****     else
+ 144:BSP_DJI/Src/DJI_Motor.c ****     {
+ 145:BSP_DJI/Src/DJI_Motor.c ****         return 0;
+ 319              		.loc 1 145 16 view .LVU111
+ 320 017e 0020     		movs	r0, #0
+ 321              	.LVL19:
+ 146:BSP_DJI/Src/DJI_Motor.c ****     }
+ 147:BSP_DJI/Src/DJI_Motor.c **** }
+ 322              		.loc 1 147 1 view .LVU112
+ 323 0180 7047     		bx	lr
+ 324              	.L25:
+ 325 0182 00BF     		.align	2
+ 326              	.L24:
+ 327 0184 0000B443 		.word	1135869952
+ 328 0188 00F8FF45 		.word	1174403072
+ 329              		.cfi_endproc
+ 330              	.LFE151:
+ 332              		.section	.text.DJIMotor_ParaHandle,"ax",%progbits
+ 333              		.align	1
+ 334              		.global	DJIMotor_ParaHandle
+ 335              		.syntax unified
+ 336              		.thumb
+ 337              		.thumb_func
+ 339              	DJIMotor_ParaHandle:
+ 340              	.LVL20:
+ 341              	.LFB150:
+  12:BSP_DJI/Src/DJI_Motor.c ****     if (mot->type == MOTOR_3508 || mot->type == MOTOR_2006)
+ 342              		.loc 1 12 1 is_stmt 1 view -0
+ 343              		.cfi_startproc
+ 344              		@ args = 0, pretend = 0, frame = 0
+ 345              		@ frame_needed = 0, uses_anonymous_args = 0
+  12:BSP_DJI/Src/DJI_Motor.c ****     if (mot->type == MOTOR_3508 || mot->type == MOTOR_2006)
+ 346              		.loc 1 12 1 is_stmt 0 view .LVU114
+ 347 0000 08B5     		push	{r3, lr}
+ 348              	.LCFI0:
+ 349              		.cfi_def_cfa_offset 8
+ 350              		.cfi_offset 3, -8
+ 351              		.cfi_offset 14, -4
+  13:BSP_DJI/Src/DJI_Motor.c ****     {
+ 352              		.loc 1 13 5 is_stmt 1 view .LVU115
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 11
+
+
+  13:BSP_DJI/Src/DJI_Motor.c ****     {
+ 353              		.loc 1 13 12 is_stmt 0 view .LVU116
+ 354 0002 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
+  13:BSP_DJI/Src/DJI_Motor.c ****     {
+ 355              		.loc 1 13 33 view .LVU117
+ 356 0004 531E     		subs	r3, r2, #1
+ 357 0006 DBB2     		uxtb	r3, r3
+  13:BSP_DJI/Src/DJI_Motor.c ****     {
+ 358              		.loc 1 13 8 view .LVU118
+ 359 0008 012B     		cmp	r3, #1
+ 360 000a 28D9     		bls	.L34
+  34:BSP_DJI/Src/DJI_Motor.c ****     {
+ 361              		.loc 1 34 10 is_stmt 1 view .LVU119
+  34:BSP_DJI/Src/DJI_Motor.c ****     {
+ 362              		.loc 1 34 13 is_stmt 0 view .LVU120
+ 363 000c 032A     		cmp	r2, #3
+ 364 000e 4CD1     		bne	.L26
+  36:BSP_DJI/Src/DJI_Motor.c **** 
+ 365              		.loc 1 36 9 is_stmt 1 view .LVU121
+  36:BSP_DJI/Src/DJI_Motor.c **** 
+ 366              		.loc 1 36 26 is_stmt 0 view .LVU122
+ 367 0010 8369     		ldr	r3, [r0, #24]
+  36:BSP_DJI/Src/DJI_Motor.c **** 
+ 368              		.loc 1 36 39 view .LVU123
+ 369 0012 0133     		adds	r3, r3, #1
+ 370 0014 8361     		str	r3, [r0, #24]
+  38:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+ 371              		.loc 1 38 9 is_stmt 1 view .LVU124
+  38:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+ 372              		.loc 1 38 16 is_stmt 0 view .LVU125
+ 373 0016 90F84C20 		ldrb	r2, [r0, #76]	@ zero_extendqisi2
+  38:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+ 374              		.loc 1 38 12 view .LVU126
+ 375 001a 012A     		cmp	r2, #1
+ 376 001c 49D0     		beq	.L35
+ 377              	.L31:
+  41:BSP_DJI/Src/DJI_Motor.c **** 
+ 378              		.loc 1 41 9 is_stmt 1 view .LVU127
+  41:BSP_DJI/Src/DJI_Motor.c **** 
+ 379              		.loc 1 41 66 is_stmt 0 view .LVU128
+ 380 001e 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+  41:BSP_DJI/Src/DJI_Motor.c **** 
+ 381              		.loc 1 41 83 view .LVU129
+ 382 0022 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+  41:BSP_DJI/Src/DJI_Motor.c **** 
+ 383              		.loc 1 41 49 view .LVU130
+ 384 0024 43EA0C23 		orr	r3, r3, ip, lsl #8
+  41:BSP_DJI/Src/DJI_Motor.c **** 
+ 385              		.loc 1 41 47 view .LVU131
+ 386 0028 C384     		strh	r3, [r0, #38]	@ movhi
+  43:BSP_DJI/Src/DJI_Motor.c ****         {
+ 387              		.loc 1 43 9 is_stmt 1 view .LVU132
+  43:BSP_DJI/Src/DJI_Motor.c ****         {
+ 388              		.loc 1 43 12 is_stmt 0 view .LVU133
+ 389 002a 1AB9     		cbnz	r2, .L32
+  45:BSP_DJI/Src/DJI_Motor.c ****             mot->First_Frame = 1;
+ 390              		.loc 1 45 13 is_stmt 1 view .LVU134
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 12
+
+
+  45:BSP_DJI/Src/DJI_Motor.c ****             mot->First_Frame = 1;
+ 391              		.loc 1 45 51 is_stmt 0 view .LVU135
+ 392 002c 0385     		strh	r3, [r0, #40]	@ movhi
+  46:BSP_DJI/Src/DJI_Motor.c ****         }
+ 393              		.loc 1 46 13 is_stmt 1 view .LVU136
+  46:BSP_DJI/Src/DJI_Motor.c ****         }
+ 394              		.loc 1 46 30 is_stmt 0 view .LVU137
+ 395 002e 0123     		movs	r3, #1
+ 396 0030 80F84C30 		strb	r3, [r0, #76]
+ 397              	.L32:
+  49:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ 398              		.loc 1 49 9 is_stmt 1 view .LVU138
+  49:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ 399              		.loc 1 49 55 is_stmt 0 view .LVU139
+ 400 0034 8A78     		ldrb	r2, [r1, #2]	@ zero_extendqisi2
+  49:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ 401              		.loc 1 49 72 view .LVU140
+ 402 0036 CB78     		ldrb	r3, [r1, #3]	@ zero_extendqisi2
+  49:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ 403              		.loc 1 49 39 view .LVU141
+ 404 0038 43EA0223 		orr	r3, r3, r2, lsl #8
+ 405 003c 1BB2     		sxth	r3, r3
+  49:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ 406              		.loc 1 49 37 view .LVU142
+ 407 003e 8383     		strh	r3, [r0, #28]	@ movhi
+  50:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 408              		.loc 1 50 9 is_stmt 1 view .LVU143
+  50:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 409              		.loc 1 50 53 is_stmt 0 view .LVU144
+ 410 0040 91F804C0 		ldrb	ip, [r1, #4]	@ zero_extendqisi2
+  50:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 411              		.loc 1 50 70 view .LVU145
+ 412 0044 4A79     		ldrb	r2, [r1, #5]	@ zero_extendqisi2
+  50:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 413              		.loc 1 50 37 view .LVU146
+ 414 0046 42EA0C22 		orr	r2, r2, ip, lsl #8
+  50:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 415              		.loc 1 50 35 view .LVU147
+ 416 004a C283     		strh	r2, [r0, #30]	@ movhi
+  51:BSP_DJI/Src/DJI_Motor.c **** 
+ 417              		.loc 1 51 9 is_stmt 1 view .LVU148
+  51:BSP_DJI/Src/DJI_Motor.c **** 
+ 418              		.loc 1 51 31 is_stmt 0 view .LVU149
+ 419 004c 07EE903A 		vmov	s15, r3	@ int
+ 420 0050 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 421 0054 C0ED0D7A 		vstr.32	s15, [r0, #52]
+  53:BSP_DJI/Src/DJI_Motor.c ****     }
+ 422              		.loc 1 53 9 is_stmt 1 view .LVU150
+ 423 0058 FFF7FEFF 		bl	DJIMotor_AngleHandle
+ 424              	.LVL21:
+  53:BSP_DJI/Src/DJI_Motor.c ****     }
+ 425              		.loc 1 53 9 is_stmt 0 view .LVU151
+ 426 005c 25E0     		b	.L26
+ 427              	.LVL22:
+ 428              	.L34:
+  15:BSP_DJI/Src/DJI_Motor.c **** 
+ 429              		.loc 1 15 9 is_stmt 1 view .LVU152
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 13
+
+
+  15:BSP_DJI/Src/DJI_Motor.c **** 
+ 430              		.loc 1 15 26 is_stmt 0 view .LVU153
+ 431 005e 8369     		ldr	r3, [r0, #24]
+  15:BSP_DJI/Src/DJI_Motor.c **** 
+ 432              		.loc 1 15 39 view .LVU154
+ 433 0060 0133     		adds	r3, r3, #1
+ 434 0062 8361     		str	r3, [r0, #24]
+  17:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+ 435              		.loc 1 17 9 is_stmt 1 view .LVU155
+  17:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+ 436              		.loc 1 17 16 is_stmt 0 view .LVU156
+ 437 0064 90F84C20 		ldrb	r2, [r0, #76]	@ zero_extendqisi2
+  17:BSP_DJI/Src/DJI_Motor.c ****             mot->FeedbackData.Mechanical_Angle[1] = mot->FeedbackData.Mechanical_Angle[0];
+ 438              		.loc 1 17 12 view .LVU157
+ 439 0068 012A     		cmp	r2, #1
+ 440 006a 1FD0     		beq	.L36
+ 441              	.L28:
+  20:BSP_DJI/Src/DJI_Motor.c **** 
+ 442              		.loc 1 20 9 is_stmt 1 view .LVU158
+  20:BSP_DJI/Src/DJI_Motor.c **** 
+ 443              		.loc 1 20 66 is_stmt 0 view .LVU159
+ 444 006c 91F800C0 		ldrb	ip, [r1]	@ zero_extendqisi2
+  20:BSP_DJI/Src/DJI_Motor.c **** 
+ 445              		.loc 1 20 83 view .LVU160
+ 446 0070 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+  20:BSP_DJI/Src/DJI_Motor.c **** 
+ 447              		.loc 1 20 49 view .LVU161
+ 448 0072 43EA0C23 		orr	r3, r3, ip, lsl #8
+  20:BSP_DJI/Src/DJI_Motor.c **** 
+ 449              		.loc 1 20 47 view .LVU162
+ 450 0076 C384     		strh	r3, [r0, #38]	@ movhi
+  22:BSP_DJI/Src/DJI_Motor.c ****         {
+ 451              		.loc 1 22 9 is_stmt 1 view .LVU163
+  22:BSP_DJI/Src/DJI_Motor.c ****         {
+ 452              		.loc 1 22 12 is_stmt 0 view .LVU164
+ 453 0078 1AB9     		cbnz	r2, .L29
+  24:BSP_DJI/Src/DJI_Motor.c ****             mot->First_Frame = 1;
+ 454              		.loc 1 24 13 is_stmt 1 view .LVU165
+  24:BSP_DJI/Src/DJI_Motor.c ****             mot->First_Frame = 1;
+ 455              		.loc 1 24 51 is_stmt 0 view .LVU166
+ 456 007a 0385     		strh	r3, [r0, #40]	@ movhi
+  25:BSP_DJI/Src/DJI_Motor.c ****         }
+ 457              		.loc 1 25 13 is_stmt 1 view .LVU167
+  25:BSP_DJI/Src/DJI_Motor.c ****         }
+ 458              		.loc 1 25 30 is_stmt 0 view .LVU168
+ 459 007c 0123     		movs	r3, #1
+ 460 007e 80F84C30 		strb	r3, [r0, #76]
+ 461              	.L29:
+  28:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ 462              		.loc 1 28 9 is_stmt 1 view .LVU169
+  28:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ 463              		.loc 1 28 55 is_stmt 0 view .LVU170
+ 464 0082 8A78     		ldrb	r2, [r1, #2]	@ zero_extendqisi2
+  28:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ 465              		.loc 1 28 72 view .LVU171
+ 466 0084 CB78     		ldrb	r3, [r1, #3]	@ zero_extendqisi2
+  28:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 14
+
+
+ 467              		.loc 1 28 39 view .LVU172
+ 468 0086 43EA0223 		orr	r3, r3, r2, lsl #8
+ 469 008a 1BB2     		sxth	r3, r3
+  28:BSP_DJI/Src/DJI_Motor.c ****         mot->FeedbackData.Current = (int16_t)((adata[4] << 8) | adata[5]);
+ 470              		.loc 1 28 37 view .LVU173
+ 471 008c 8383     		strh	r3, [r0, #28]	@ movhi
+  29:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 472              		.loc 1 29 9 is_stmt 1 view .LVU174
+  29:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 473              		.loc 1 29 53 is_stmt 0 view .LVU175
+ 474 008e 91F804C0 		ldrb	ip, [r1, #4]	@ zero_extendqisi2
+  29:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 475              		.loc 1 29 70 view .LVU176
+ 476 0092 4A79     		ldrb	r2, [r1, #5]	@ zero_extendqisi2
+  29:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 477              		.loc 1 29 37 view .LVU177
+ 478 0094 42EA0C22 		orr	r2, r2, ip, lsl #8
+  29:BSP_DJI/Src/DJI_Motor.c ****         mot->Realrotationrate = mot->FeedbackData.RealSpeed;
+ 479              		.loc 1 29 35 view .LVU178
+ 480 0098 C283     		strh	r2, [r0, #30]	@ movhi
+  30:BSP_DJI/Src/DJI_Motor.c **** 
+ 481              		.loc 1 30 9 is_stmt 1 view .LVU179
+  30:BSP_DJI/Src/DJI_Motor.c **** 
+ 482              		.loc 1 30 31 is_stmt 0 view .LVU180
+ 483 009a 07EE903A 		vmov	s15, r3	@ int
+ 484 009e F8EEE77A 		vcvt.f32.s32	s15, s15
+ 485 00a2 C0ED0D7A 		vstr.32	s15, [r0, #52]
+  32:BSP_DJI/Src/DJI_Motor.c ****     }
+ 486              		.loc 1 32 9 is_stmt 1 view .LVU181
+ 487 00a6 FFF7FEFF 		bl	DJIMotor_AngleHandle
+ 488              	.LVL23:
+ 489              	.L26:
+  57:BSP_DJI/Src/DJI_Motor.c **** 
+ 490              		.loc 1 57 1 is_stmt 0 view .LVU182
+ 491 00aa 08BD     		pop	{r3, pc}
+ 492              	.LVL24:
+ 493              	.L36:
+  18:BSP_DJI/Src/DJI_Motor.c **** 
+ 494              		.loc 1 18 13 is_stmt 1 view .LVU183
+  18:BSP_DJI/Src/DJI_Motor.c **** 
+ 495              		.loc 1 18 87 is_stmt 0 view .LVU184
+ 496 00ac C38C     		ldrh	r3, [r0, #38]
+  18:BSP_DJI/Src/DJI_Motor.c **** 
+ 497              		.loc 1 18 51 view .LVU185
+ 498 00ae 0385     		strh	r3, [r0, #40]	@ movhi
+ 499 00b0 DCE7     		b	.L28
+ 500              	.L35:
+  39:BSP_DJI/Src/DJI_Motor.c **** 
+ 501              		.loc 1 39 13 is_stmt 1 view .LVU186
+  39:BSP_DJI/Src/DJI_Motor.c **** 
+ 502              		.loc 1 39 87 is_stmt 0 view .LVU187
+ 503 00b2 C38C     		ldrh	r3, [r0, #38]
+  39:BSP_DJI/Src/DJI_Motor.c **** 
+ 504              		.loc 1 39 51 view .LVU188
+ 505 00b4 0385     		strh	r3, [r0, #40]	@ movhi
+ 506 00b6 B2E7     		b	.L31
+ 507              		.cfi_endproc
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 15
+
+
+ 508              	.LFE150:
+ 510              		.text
+ 511              	.Letext0:
+ 512              		.file 2 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 513              		.file 3 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 514              		.file 4 "BSP_DJI/INC/PID.h"
+ 515              		.file 5 "BSP_DJI/INC/Motor.h"
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 DJI_Motor.c
+C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s:20     .text.DJIMotor_AngleHandle:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s:26     .text.DJIMotor_AngleHandle:00000000 DJIMotor_AngleHandle
+C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s:327    .text.DJIMotor_AngleHandle:00000184 $d
+C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s:333    .text.DJIMotor_ParaHandle:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\cccrqlLe.s:339    .text.DJIMotor_ParaHandle:00000000 DJIMotor_ParaHandle
+
+NO UNDEFINED SYMBOLS
