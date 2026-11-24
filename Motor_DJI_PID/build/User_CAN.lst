@@ -1,0 +1,516 @@
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"User_CAN.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "BSP_DJI/Src/User_CAN.c"
+  19              		.section	.text.CAN_Fliter_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	CAN_Fliter_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	CAN_Fliter_Init:
+  27              	.LVL0:
+  28              	.LFB151:
+   1:BSP_DJI/Src/User_CAN.c **** /**Include Header Files**/
+   2:BSP_DJI/Src/User_CAN.c **** #include "User_CAN.h"
+   3:BSP_DJI/Src/User_CAN.c **** #include "DJI_Motor.h"   // 引用大疆电机解析函数
+   4:BSP_DJI/Src/User_CAN.c **** 
+   5:BSP_DJI/Src/User_CAN.c **** // 🌟 告诉编译器，hfdcan1 在其他文件（main.c/fdcan.c）里已经定义过了
+   6:BSP_DJI/Src/User_CAN.c **** extern FDCAN_HandleTypeDef hfdcan1;
+   7:BSP_DJI/Src/User_CAN.c **** 
+   8:BSP_DJI/Src/User_CAN.c **** // 🌟 声明外部电机数组。请确保你在 main.c 或全局定义了这个名字！
+   9:BSP_DJI/Src/User_CAN.c **** extern motor_t Arm_Motor[]; 
+  10:BSP_DJI/Src/User_CAN.c **** 
+  11:BSP_DJI/Src/User_CAN.c **** void CAN_Init(FDCAN_HandleTypeDef *hfdcan)
+  12:BSP_DJI/Src/User_CAN.c **** {
+  13:BSP_DJI/Src/User_CAN.c ****   // 如果传进来的不是 CAN1，直接退出
+  14:BSP_DJI/Src/User_CAN.c ****   if (hfdcan != &hfdcan1) {
+  15:BSP_DJI/Src/User_CAN.c ****     return;
+  16:BSP_DJI/Src/User_CAN.c ****   }
+  17:BSP_DJI/Src/User_CAN.c **** 
+  18:BSP_DJI/Src/User_CAN.c ****   CAN_Fliter_Init(hfdcan);
+  19:BSP_DJI/Src/User_CAN.c ****   HAL_FDCAN_Start(hfdcan);
+  20:BSP_DJI/Src/User_CAN.c ****   HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+  21:BSP_DJI/Src/User_CAN.c **** }
+  22:BSP_DJI/Src/User_CAN.c **** 
+  23:BSP_DJI/Src/User_CAN.c **** void CAN_Fliter_Init(FDCAN_HandleTypeDef *hfdcan)
+  24:BSP_DJI/Src/User_CAN.c **** {
+  29              		.loc 1 24 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 32
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  25:BSP_DJI/Src/User_CAN.c ****   FDCAN_FilterTypeDef sFilterConfig;
+  33              		.loc 1 25 3 view .LVU1
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 2
+
+
+  26:BSP_DJI/Src/User_CAN.c **** 
+  27:BSP_DJI/Src/User_CAN.c ****   if (hfdcan != &hfdcan1) {
+  34              		.loc 1 27 3 view .LVU2
+  35              		.loc 1 27 6 is_stmt 0 view .LVU3
+  36 0000 104B     		ldr	r3, .L9
+  37 0002 9842     		cmp	r0, r3
+  38 0004 00D0     		beq	.L8
+  39 0006 7047     		bx	lr
+  40              	.L8:
+  24:BSP_DJI/Src/User_CAN.c ****   FDCAN_FilterTypeDef sFilterConfig;
+  41              		.loc 1 24 1 view .LVU4
+  42 0008 70B5     		push	{r4, r5, r6, lr}
+  43              	.LCFI0:
+  44              		.cfi_def_cfa_offset 16
+  45              		.cfi_offset 4, -16
+  46              		.cfi_offset 5, -12
+  47              		.cfi_offset 6, -8
+  48              		.cfi_offset 14, -4
+  49 000a 8AB0     		sub	sp, sp, #40
+  50              	.LCFI1:
+  51              		.cfi_def_cfa_offset 56
+  52 000c 0446     		mov	r4, r0
+  28:BSP_DJI/Src/User_CAN.c ****     return;
+  29:BSP_DJI/Src/User_CAN.c ****   }
+  30:BSP_DJI/Src/User_CAN.c **** 
+  31:BSP_DJI/Src/User_CAN.c ****   sFilterConfig.IdType = FDCAN_STANDARD_ID;
+  53              		.loc 1 31 3 is_stmt 1 view .LVU5
+  54              		.loc 1 31 24 is_stmt 0 view .LVU6
+  55 000e 0023     		movs	r3, #0
+  56 0010 0293     		str	r3, [sp, #8]
+  32:BSP_DJI/Src/User_CAN.c ****   sFilterConfig.FilterIndex = 0;
+  57              		.loc 1 32 3 is_stmt 1 view .LVU7
+  58              		.loc 1 32 29 is_stmt 0 view .LVU8
+  59 0012 0393     		str	r3, [sp, #12]
+  33:BSP_DJI/Src/User_CAN.c ****   sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+  60              		.loc 1 33 3 is_stmt 1 view .LVU9
+  61              		.loc 1 33 28 is_stmt 0 view .LVU10
+  62 0014 0226     		movs	r6, #2
+  63 0016 0496     		str	r6, [sp, #16]
+  34:BSP_DJI/Src/User_CAN.c ****   sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  64              		.loc 1 34 3 is_stmt 1 view .LVU11
+  65              		.loc 1 34 30 is_stmt 0 view .LVU12
+  66 0018 0125     		movs	r5, #1
+  67 001a 0595     		str	r5, [sp, #20]
+  35:BSP_DJI/Src/User_CAN.c ****   sFilterConfig.FilterID1 = 0x00; 
+  68              		.loc 1 35 3 is_stmt 1 view .LVU13
+  69              		.loc 1 35 27 is_stmt 0 view .LVU14
+  70 001c 0693     		str	r3, [sp, #24]
+  36:BSP_DJI/Src/User_CAN.c ****   sFilterConfig.FilterID2 = 0x00; 
+  71              		.loc 1 36 3 is_stmt 1 view .LVU15
+  72              		.loc 1 36 27 is_stmt 0 view .LVU16
+  73 001e 0793     		str	r3, [sp, #28]
+  37:BSP_DJI/Src/User_CAN.c ****   
+  38:BSP_DJI/Src/User_CAN.c ****   HAL_FDCAN_ConfigFilter(hfdcan, &sFilterConfig);
+  74              		.loc 1 38 3 is_stmt 1 view .LVU17
+  75 0020 02A9     		add	r1, sp, #8
+  76 0022 FFF7FEFF 		bl	HAL_FDCAN_ConfigFilter
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 3
+
+
+  77              	.LVL1:
+  39:BSP_DJI/Src/User_CAN.c ****   HAL_FDCAN_ConfigGlobalFilter(hfdcan, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJEC
+  78              		.loc 1 39 3 view .LVU18
+  79 0026 0095     		str	r5, [sp]
+  80 0028 2B46     		mov	r3, r5
+  81 002a 3246     		mov	r2, r6
+  82 002c 3146     		mov	r1, r6
+  83 002e 2046     		mov	r0, r4
+  84 0030 FFF7FEFF 		bl	HAL_FDCAN_ConfigGlobalFilter
+  85              	.LVL2:
+  40:BSP_DJI/Src/User_CAN.c ****   HAL_FDCAN_ConfigFifoWatermark(hfdcan, FDCAN_CFG_RX_FIFO0, 1);
+  86              		.loc 1 40 3 view .LVU19
+  87 0034 2A46     		mov	r2, r5
+  88 0036 2946     		mov	r1, r5
+  89 0038 2046     		mov	r0, r4
+  90 003a FFF7FEFF 		bl	HAL_FDCAN_ConfigFifoWatermark
+  91              	.LVL3:
+  41:BSP_DJI/Src/User_CAN.c **** }
+  92              		.loc 1 41 1 is_stmt 0 view .LVU20
+  93 003e 0AB0     		add	sp, sp, #40
+  94              	.LCFI2:
+  95              		.cfi_def_cfa_offset 16
+  96              		@ sp needed
+  97 0040 70BD     		pop	{r4, r5, r6, pc}
+  98              	.LVL4:
+  99              	.L10:
+ 100              		.loc 1 41 1 view .LVU21
+ 101 0042 00BF     		.align	2
+ 102              	.L9:
+ 103 0044 00000000 		.word	hfdcan1
+ 104              		.cfi_endproc
+ 105              	.LFE151:
+ 107              		.section	.text.CAN_Init,"ax",%progbits
+ 108              		.align	1
+ 109              		.global	CAN_Init
+ 110              		.syntax unified
+ 111              		.thumb
+ 112              		.thumb_func
+ 114              	CAN_Init:
+ 115              	.LVL5:
+ 116              	.LFB150:
+  12:BSP_DJI/Src/User_CAN.c ****   // 如果传进来的不是 CAN1，直接退出
+ 117              		.loc 1 12 1 is_stmt 1 view -0
+ 118              		.cfi_startproc
+ 119              		@ args = 0, pretend = 0, frame = 0
+ 120              		@ frame_needed = 0, uses_anonymous_args = 0
+  14:BSP_DJI/Src/User_CAN.c ****     return;
+ 121              		.loc 1 14 3 view .LVU23
+  14:BSP_DJI/Src/User_CAN.c ****     return;
+ 122              		.loc 1 14 6 is_stmt 0 view .LVU24
+ 123 0000 084B     		ldr	r3, .L18
+ 124 0002 9842     		cmp	r0, r3
+ 125 0004 00D0     		beq	.L17
+ 126 0006 7047     		bx	lr
+ 127              	.L17:
+  12:BSP_DJI/Src/User_CAN.c ****   // 如果传进来的不是 CAN1，直接退出
+ 128              		.loc 1 12 1 view .LVU25
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 4
+
+
+ 129 0008 10B5     		push	{r4, lr}
+ 130              	.LCFI3:
+ 131              		.cfi_def_cfa_offset 8
+ 132              		.cfi_offset 4, -8
+ 133              		.cfi_offset 14, -4
+ 134 000a 0446     		mov	r4, r0
+  18:BSP_DJI/Src/User_CAN.c ****   HAL_FDCAN_Start(hfdcan);
+ 135              		.loc 1 18 3 is_stmt 1 view .LVU26
+ 136 000c FFF7FEFF 		bl	CAN_Fliter_Init
+ 137              	.LVL6:
+  19:BSP_DJI/Src/User_CAN.c ****   HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+ 138              		.loc 1 19 3 view .LVU27
+ 139 0010 2046     		mov	r0, r4
+ 140 0012 FFF7FEFF 		bl	HAL_FDCAN_Start
+ 141              	.LVL7:
+  20:BSP_DJI/Src/User_CAN.c **** }
+ 142              		.loc 1 20 3 view .LVU28
+ 143 0016 0022     		movs	r2, #0
+ 144 0018 0121     		movs	r1, #1
+ 145 001a 2046     		mov	r0, r4
+ 146 001c FFF7FEFF 		bl	HAL_FDCAN_ActivateNotification
+ 147              	.LVL8:
+  21:BSP_DJI/Src/User_CAN.c **** 
+ 148              		.loc 1 21 1 is_stmt 0 view .LVU29
+ 149 0020 10BD     		pop	{r4, pc}
+ 150              	.LVL9:
+ 151              	.L19:
+  21:BSP_DJI/Src/User_CAN.c **** 
+ 152              		.loc 1 21 1 view .LVU30
+ 153 0022 00BF     		.align	2
+ 154              	.L18:
+ 155 0024 00000000 		.word	hfdcan1
+ 156              		.cfi_endproc
+ 157              	.LFE150:
+ 159              		.section	.text.Can1Received_infoHandle,"ax",%progbits
+ 160              		.align	1
+ 161              		.global	Can1Received_infoHandle
+ 162              		.syntax unified
+ 163              		.thumb
+ 164              		.thumb_func
+ 166              	Can1Received_infoHandle:
+ 167              	.LVL10:
+ 168              	.LFB153:
+  42:BSP_DJI/Src/User_CAN.c **** 
+  43:BSP_DJI/Src/User_CAN.c **** /**
+  44:BSP_DJI/Src/User_CAN.c ****  * @brief  FIFO0的CAN接收回调 (只处理 CAN1)
+  45:BSP_DJI/Src/User_CAN.c ****  */
+  46:BSP_DJI/Src/User_CAN.c **** void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
+  47:BSP_DJI/Src/User_CAN.c **** {
+  48:BSP_DJI/Src/User_CAN.c ****   FDCAN_RxHeaderTypeDef RxHeader;
+  49:BSP_DJI/Src/User_CAN.c ****   uint8_t aData[8];
+  50:BSP_DJI/Src/User_CAN.c **** 
+  51:BSP_DJI/Src/User_CAN.c ****   (void)RxFifo0ITs;
+  52:BSP_DJI/Src/User_CAN.c ****   
+  53:BSP_DJI/Src/User_CAN.c ****   if (hfdcan != &hfdcan1) return;
+  54:BSP_DJI/Src/User_CAN.c **** 
+  55:BSP_DJI/Src/User_CAN.c ****   if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader, aData) == HAL_OK)
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 5
+
+
+  56:BSP_DJI/Src/User_CAN.c ****   {
+  57:BSP_DJI/Src/User_CAN.c ****     Can1Received_infoHandle(RxHeader.Identifier, aData);
+  58:BSP_DJI/Src/User_CAN.c ****   }
+  59:BSP_DJI/Src/User_CAN.c **** }
+  60:BSP_DJI/Src/User_CAN.c **** 
+  61:BSP_DJI/Src/User_CAN.c **** /**
+  62:BSP_DJI/Src/User_CAN.c ****  * @brief  处理 CAN1 接收到的数据 (专注大疆 3508)
+  63:BSP_DJI/Src/User_CAN.c ****  */
+  64:BSP_DJI/Src/User_CAN.c **** void Can1Received_infoHandle(uint32_t stdid, uint8_t adata[])
+  65:BSP_DJI/Src/User_CAN.c **** {
+ 169              		.loc 1 65 1 is_stmt 1 view -0
+ 170              		.cfi_startproc
+ 171              		@ args = 0, pretend = 0, frame = 0
+ 172              		@ frame_needed = 0, uses_anonymous_args = 0
+  66:BSP_DJI/Src/User_CAN.c ****   if (adata == NULL) return;
+ 173              		.loc 1 66 3 view .LVU32
+ 174              		.loc 1 66 6 is_stmt 0 view .LVU33
+ 175 0000 79B1     		cbz	r1, .L23
+  65:BSP_DJI/Src/User_CAN.c ****   if (adata == NULL) return;
+ 176              		.loc 1 65 1 view .LVU34
+ 177 0002 08B5     		push	{r3, lr}
+ 178              	.LCFI4:
+ 179              		.cfi_def_cfa_offset 8
+ 180              		.cfi_offset 3, -8
+ 181              		.cfi_offset 14, -4
+  67:BSP_DJI/Src/User_CAN.c **** 
+  68:BSP_DJI/Src/User_CAN.c ****   // 🌟 大疆 3508 反馈报文 ID 范围：0x201 ~ 0x208
+  69:BSP_DJI/Src/User_CAN.c ****   if (stdid >= 0x201 && stdid <= 0x208) 
+ 182              		.loc 1 69 3 is_stmt 1 view .LVU35
+ 183              		.loc 1 69 22 is_stmt 0 view .LVU36
+ 184 0004 A0F20123 		subw	r3, r0, #513
+ 185              		.loc 1 69 6 view .LVU37
+ 186 0008 072B     		cmp	r3, #7
+ 187 000a 00D9     		bls	.L26
+ 188              	.LVL11:
+ 189              	.L20:
+  70:BSP_DJI/Src/User_CAN.c ****   {
+  71:BSP_DJI/Src/User_CAN.c ****       uint8_t motor_idx = stdid - 0x201; // 计算数组下标
+  72:BSP_DJI/Src/User_CAN.c ****       DJIMotor_ParaHandle(&Arm_Motor[motor_idx], adata); // 调用解析
+  73:BSP_DJI/Src/User_CAN.c ****       return;
+  74:BSP_DJI/Src/User_CAN.c ****   }
+  75:BSP_DJI/Src/User_CAN.c **** }
+ 190              		.loc 1 75 1 view .LVU38
+ 191 000c 08BD     		pop	{r3, pc}
+ 192              	.LVL12:
+ 193              	.L26:
+ 194              	.LBB2:
+  71:BSP_DJI/Src/User_CAN.c ****       DJIMotor_ParaHandle(&Arm_Motor[motor_idx], adata); // 调用解析
+ 195              		.loc 1 71 7 is_stmt 1 view .LVU39
+  71:BSP_DJI/Src/User_CAN.c ****       DJIMotor_ParaHandle(&Arm_Motor[motor_idx], adata); // 调用解析
+ 196              		.loc 1 71 33 is_stmt 0 view .LVU40
+ 197 000e C0B2     		uxtb	r0, r0
+ 198              	.LVL13:
+  71:BSP_DJI/Src/User_CAN.c ****       DJIMotor_ParaHandle(&Arm_Motor[motor_idx], adata); // 调用解析
+ 199              		.loc 1 71 15 view .LVU41
+ 200 0010 431E     		subs	r3, r0, #1
+ 201              	.LVL14:
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 6
+
+
+  71:BSP_DJI/Src/User_CAN.c ****       DJIMotor_ParaHandle(&Arm_Motor[motor_idx], adata); // 调用解析
+ 202              		.loc 1 71 15 view .LVU42
+ 203 0012 DBB2     		uxtb	r3, r3
+ 204              	.LVL15:
+  72:BSP_DJI/Src/User_CAN.c ****       return;
+ 205              		.loc 1 72 7 is_stmt 1 view .LVU43
+ 206 0014 6820     		movs	r0, #104
+ 207 0016 034A     		ldr	r2, .L27
+ 208 0018 00FB0320 		mla	r0, r0, r3, r2
+ 209 001c FFF7FEFF 		bl	DJIMotor_ParaHandle
+ 210              	.LVL16:
+  73:BSP_DJI/Src/User_CAN.c ****   }
+ 211              		.loc 1 73 7 view .LVU44
+ 212 0020 F4E7     		b	.L20
+ 213              	.LVL17:
+ 214              	.L23:
+ 215              	.LCFI5:
+ 216              		.cfi_def_cfa_offset 0
+ 217              		.cfi_restore 3
+ 218              		.cfi_restore 14
+  73:BSP_DJI/Src/User_CAN.c ****   }
+ 219              		.loc 1 73 7 is_stmt 0 view .LVU45
+ 220 0022 7047     		bx	lr
+ 221              	.L28:
+ 222              		.align	2
+ 223              	.L27:
+ 224 0024 00000000 		.word	Arm_Motor
+ 225              	.LBE2:
+ 226              		.cfi_endproc
+ 227              	.LFE153:
+ 229              		.section	.text.HAL_FDCAN_RxFifo0Callback,"ax",%progbits
+ 230              		.align	1
+ 231              		.global	HAL_FDCAN_RxFifo0Callback
+ 232              		.syntax unified
+ 233              		.thumb
+ 234              		.thumb_func
+ 236              	HAL_FDCAN_RxFifo0Callback:
+ 237              	.LVL18:
+ 238              	.LFB152:
+  47:BSP_DJI/Src/User_CAN.c ****   FDCAN_RxHeaderTypeDef RxHeader;
+ 239              		.loc 1 47 1 is_stmt 1 view -0
+ 240              		.cfi_startproc
+ 241              		@ args = 0, pretend = 0, frame = 48
+ 242              		@ frame_needed = 0, uses_anonymous_args = 0
+  48:BSP_DJI/Src/User_CAN.c ****   uint8_t aData[8];
+ 243              		.loc 1 48 3 view .LVU47
+  49:BSP_DJI/Src/User_CAN.c **** 
+ 244              		.loc 1 49 3 view .LVU48
+  51:BSP_DJI/Src/User_CAN.c ****   
+ 245              		.loc 1 51 3 view .LVU49
+  53:BSP_DJI/Src/User_CAN.c **** 
+ 246              		.loc 1 53 3 view .LVU50
+  53:BSP_DJI/Src/User_CAN.c **** 
+ 247              		.loc 1 53 6 is_stmt 0 view .LVU51
+ 248 0000 094B     		ldr	r3, .L39
+ 249 0002 9842     		cmp	r0, r3
+ 250 0004 00D0     		beq	.L37
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 7
+
+
+ 251 0006 7047     		bx	lr
+ 252              	.L37:
+  47:BSP_DJI/Src/User_CAN.c ****   FDCAN_RxHeaderTypeDef RxHeader;
+ 253              		.loc 1 47 1 view .LVU52
+ 254 0008 00B5     		push	{lr}
+ 255              	.LCFI6:
+ 256              		.cfi_def_cfa_offset 4
+ 257              		.cfi_offset 14, -4
+ 258 000a 8DB0     		sub	sp, sp, #52
+ 259              	.LCFI7:
+ 260              		.cfi_def_cfa_offset 56
+  55:BSP_DJI/Src/User_CAN.c ****   {
+ 261              		.loc 1 55 3 is_stmt 1 view .LVU53
+  55:BSP_DJI/Src/User_CAN.c ****   {
+ 262              		.loc 1 55 7 is_stmt 0 view .LVU54
+ 263 000c 6B46     		mov	r3, sp
+ 264 000e 02AA     		add	r2, sp, #8
+ 265 0010 4021     		movs	r1, #64
+ 266              	.LVL19:
+  55:BSP_DJI/Src/User_CAN.c ****   {
+ 267              		.loc 1 55 7 view .LVU55
+ 268 0012 FFF7FEFF 		bl	HAL_FDCAN_GetRxMessage
+ 269              	.LVL20:
+  55:BSP_DJI/Src/User_CAN.c ****   {
+ 270              		.loc 1 55 6 discriminator 1 view .LVU56
+ 271 0016 10B1     		cbz	r0, .L38
+ 272              	.L29:
+  59:BSP_DJI/Src/User_CAN.c **** 
+ 273              		.loc 1 59 1 view .LVU57
+ 274 0018 0DB0     		add	sp, sp, #52
+ 275              	.LCFI8:
+ 276              		.cfi_remember_state
+ 277              		.cfi_def_cfa_offset 4
+ 278              		@ sp needed
+ 279 001a 5DF804FB 		ldr	pc, [sp], #4
+ 280              	.L38:
+ 281              	.LCFI9:
+ 282              		.cfi_restore_state
+  57:BSP_DJI/Src/User_CAN.c ****   }
+ 283              		.loc 1 57 5 is_stmt 1 view .LVU58
+ 284 001e 6946     		mov	r1, sp
+ 285 0020 0298     		ldr	r0, [sp, #8]
+ 286 0022 FFF7FEFF 		bl	Can1Received_infoHandle
+ 287              	.LVL21:
+ 288 0026 F7E7     		b	.L29
+ 289              	.L40:
+ 290              		.align	2
+ 291              	.L39:
+ 292 0028 00000000 		.word	hfdcan1
+ 293              		.cfi_endproc
+ 294              	.LFE152:
+ 296              		.section	.text.Can2Received_infoHandle,"ax",%progbits
+ 297              		.align	1
+ 298              		.global	Can2Received_infoHandle
+ 299              		.syntax unified
+ 300              		.thumb
+ 301              		.thumb_func
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 8
+
+
+ 303              	Can2Received_infoHandle:
+ 304              	.LVL22:
+ 305              	.LFB154:
+  76:BSP_DJI/Src/User_CAN.c **** 
+  77:BSP_DJI/Src/User_CAN.c **** // 为了满足头文件里的声明，留个空函数在这里，防止链接报错
+  78:BSP_DJI/Src/User_CAN.c **** void Can2Received_infoHandle(uint32_t stdid, uint8_t adata[])
+  79:BSP_DJI/Src/User_CAN.c **** {
+ 306              		.loc 1 79 1 view -0
+ 307              		.cfi_startproc
+ 308              		@ args = 0, pretend = 0, frame = 0
+ 309              		@ frame_needed = 0, uses_anonymous_args = 0
+ 310              		@ link register save eliminated.
+  80:BSP_DJI/Src/User_CAN.c ****   (void)stdid; 
+ 311              		.loc 1 80 3 view .LVU60
+  81:BSP_DJI/Src/User_CAN.c ****   (void)adata;
+ 312              		.loc 1 81 3 view .LVU61
+  82:BSP_DJI/Src/User_CAN.c **** }
+ 313              		.loc 1 82 1 is_stmt 0 view .LVU62
+ 314 0000 7047     		bx	lr
+ 315              		.cfi_endproc
+ 316              	.LFE154:
+ 318              		.section	.text.Can3Received_infoHandle,"ax",%progbits
+ 319              		.align	1
+ 320              		.global	Can3Received_infoHandle
+ 321              		.syntax unified
+ 322              		.thumb
+ 323              		.thumb_func
+ 325              	Can3Received_infoHandle:
+ 326              	.LVL23:
+ 327              	.LFB155:
+  83:BSP_DJI/Src/User_CAN.c **** 
+  84:BSP_DJI/Src/User_CAN.c **** void Can3Received_infoHandle(uint32_t stdid, uint8_t adata[])
+  85:BSP_DJI/Src/User_CAN.c **** {
+ 328              		.loc 1 85 1 is_stmt 1 view -0
+ 329              		.cfi_startproc
+ 330              		@ args = 0, pretend = 0, frame = 0
+ 331              		@ frame_needed = 0, uses_anonymous_args = 0
+ 332              		@ link register save eliminated.
+  86:BSP_DJI/Src/User_CAN.c ****   (void)stdid;
+ 333              		.loc 1 86 3 view .LVU64
+  87:BSP_DJI/Src/User_CAN.c ****   (void)adata;
+ 334              		.loc 1 87 3 view .LVU65
+  88:BSP_DJI/Src/User_CAN.c **** }...
+ 335              		.loc 1 88 1 is_stmt 0 view .LVU66
+ 336 0000 7047     		bx	lr
+ 337              		.cfi_endproc
+ 338              	.LFE155:
+ 340              		.text
+ 341              	.Letext0:
+ 342              		.file 2 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 343              		.file 3 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 344              		.file 4 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h723xx.h"
+ 345              		.file 5 "Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h7xx.h"
+ 346              		.file 6 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 347              		.file 7 "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_fdcan.h"
+ 348              		.file 8 "BSP_DJI/INC/PID.h"
+ 349              		.file 9 "BSP_DJI/INC/Motor.h"
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 9
+
+
+ 350              		.file 10 "BSP_DJI/INC/DJI_Motor.h"
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 User_CAN.c
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:20     .text.CAN_Fliter_Init:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:26     .text.CAN_Fliter_Init:00000000 CAN_Fliter_Init
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:103    .text.CAN_Fliter_Init:00000044 $d
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:108    .text.CAN_Init:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:114    .text.CAN_Init:00000000 CAN_Init
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:155    .text.CAN_Init:00000024 $d
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:160    .text.Can1Received_infoHandle:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:166    .text.Can1Received_infoHandle:00000000 Can1Received_infoHandle
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:224    .text.Can1Received_infoHandle:00000024 $d
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:230    .text.HAL_FDCAN_RxFifo0Callback:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:236    .text.HAL_FDCAN_RxFifo0Callback:00000000 HAL_FDCAN_RxFifo0Callback
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:292    .text.HAL_FDCAN_RxFifo0Callback:00000028 $d
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:297    .text.Can2Received_infoHandle:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:303    .text.Can2Received_infoHandle:00000000 Can2Received_infoHandle
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:319    .text.Can3Received_infoHandle:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\ccTIguO0.s:325    .text.Can3Received_infoHandle:00000000 Can3Received_infoHandle
+
+UNDEFINED SYMBOLS
+HAL_FDCAN_ConfigFilter
+HAL_FDCAN_ConfigGlobalFilter
+HAL_FDCAN_ConfigFifoWatermark
+hfdcan1
+HAL_FDCAN_Start
+HAL_FDCAN_ActivateNotification
+DJIMotor_ParaHandle
+Arm_Motor
+HAL_FDCAN_GetRxMessage

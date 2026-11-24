@@ -1,0 +1,723 @@
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"PID.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "BSP_DJI/Src/PID.c"
+  19              		.section	.text.PID_Parameter_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	PID_Parameter_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	PID_Parameter_Init:
+  27              	.LVL0:
+  28              	.LFB150:
+   1:BSP_DJI/Src/PID.c **** /**Include Header Files**/
+   2:BSP_DJI/Src/PID.c **** #include "PID.h"
+   3:BSP_DJI/Src/PID.c **** #include <stddef.h>
+   4:BSP_DJI/Src/PID.c **** #include <math.h>
+   5:BSP_DJI/Src/PID.c **** 
+   6:BSP_DJI/Src/PID.c **** #include "main.h" 
+   7:BSP_DJI/Src/PID.c **** #include "FreeRTOS.h" 
+   8:BSP_DJI/Src/PID.c **** #include "queue.h" 
+   9:BSP_DJI/Src/PID.c **** 
+  10:BSP_DJI/Src/PID.c **** #ifndef LIMIT
+  11:BSP_DJI/Src/PID.c **** #define LIMIT(x, min, max) ((x) < (min) ? (min) : ((x) > (max) ? (max) : (x)))
+  12:BSP_DJI/Src/PID.c **** #endif
+  13:BSP_DJI/Src/PID.c **** /**Function Delaration**/
+  14:BSP_DJI/Src/PID.c **** /**
+  15:BSP_DJI/Src/PID.c ****  * @brief  pid参数和模式初始化
+  16:BSP_DJI/Src/PID.c ****  * @note
+  17:BSP_DJI/Src/PID.c ****  * @param  PID: PID结构体指针
+  18:BSP_DJI/Src/PID.c ****  * @param  mode: 模式PID_POSITION,PID_DELTA
+  19:BSP_DJI/Src/PID.c ****  * @param  Pidpara[3]: Pidpara[0] = p, Pidpara[1] =  i, Pidpara[2] = d;
+  20:BSP_DJI/Src/PID.c ****  * @param  MaxOut: 最大输出
+  21:BSP_DJI/Src/PID.c ****  * @param  MaxIout: 积分限幅
+  22:BSP_DJI/Src/PID.c ****  * @param  DeadZone:死区，默认0
+  23:BSP_DJI/Src/PID.c ****  * @retval 1：正常；0：错误
+  24:BSP_DJI/Src/PID.c ****  */
+  25:BSP_DJI/Src/PID.c **** 
+  26:BSP_DJI/Src/PID.c **** float Yaw_Speed[2];
+  27:BSP_DJI/Src/PID.c **** uint8_t PID_Parameter_Init(pid_type *pid, PID_MODE mode, const float Pidpara[], uint32_t MaxOut, ui
+  28:BSP_DJI/Src/PID.c **** {
+  29              		.loc 1 28 1 view -0
+  30              		.cfi_startproc
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 2
+
+
+  31              		@ args = 8, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34              		.loc 1 28 1 is_stmt 0 view .LVU1
+  35 0000 82B0     		sub	sp, sp, #8
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38 0002 0193     		str	r3, [sp, #4]
+  29:BSP_DJI/Src/PID.c ****     if (pid == NULL || pid == NULL)
+  39              		.loc 1 29 5 is_stmt 1 view .LVU2
+  40              		.loc 1 29 8 is_stmt 0 view .LVU3
+  41 0004 28B3     		cbz	r0, .L3
+  30:BSP_DJI/Src/PID.c ****     {
+  31:BSP_DJI/Src/PID.c ****         return 0;
+  32:BSP_DJI/Src/PID.c ****     }
+  33:BSP_DJI/Src/PID.c **** 
+  34:BSP_DJI/Src/PID.c ****     pid->pidmode = mode;
+  42              		.loc 1 34 5 is_stmt 1 view .LVU4
+  43              		.loc 1 34 18 is_stmt 0 view .LVU5
+  44 0006 0170     		strb	r1, [r0]
+  35:BSP_DJI/Src/PID.c **** 
+  36:BSP_DJI/Src/PID.c ****     pid->kp = Pidpara[0];
+  45              		.loc 1 36 5 is_stmt 1 view .LVU6
+  46              		.loc 1 36 22 is_stmt 0 view .LVU7
+  47 0008 1168     		ldr	r1, [r2]	@ float
+  48              	.LVL1:
+  49              		.loc 1 36 13 view .LVU8
+  50 000a 0162     		str	r1, [r0, #32]	@ float
+  37:BSP_DJI/Src/PID.c ****     pid->ki = Pidpara[1];
+  51              		.loc 1 37 5 is_stmt 1 view .LVU9
+  52              		.loc 1 37 22 is_stmt 0 view .LVU10
+  53 000c 5168     		ldr	r1, [r2, #4]	@ float
+  54              		.loc 1 37 13 view .LVU11
+  55 000e 4162     		str	r1, [r0, #36]	@ float
+  38:BSP_DJI/Src/PID.c ****     pid->kd = Pidpara[2];
+  56              		.loc 1 38 5 is_stmt 1 view .LVU12
+  57              		.loc 1 38 22 is_stmt 0 view .LVU13
+  58 0010 9268     		ldr	r2, [r2, #8]	@ float
+  59              	.LVL2:
+  60              		.loc 1 38 13 view .LVU14
+  61 0012 8262     		str	r2, [r0, #40]	@ float
+  39:BSP_DJI/Src/PID.c **** 
+  40:BSP_DJI/Src/PID.c ****     pid->MaxOut = MaxOut;
+  62              		.loc 1 40 5 is_stmt 1 view .LVU15
+  63              		.loc 1 40 17 is_stmt 0 view .LVU16
+  64 0014 DDED017A 		vldr.32	s15, [sp, #4]	@ int
+  65 0018 F8EE677A 		vcvt.f32.u32	s15, s15
+  66 001c C0ED117A 		vstr.32	s15, [r0, #68]
+  41:BSP_DJI/Src/PID.c **** 
+  42:BSP_DJI/Src/PID.c ****     pid->MaxIout = MaxIout;
+  67              		.loc 1 42 5 is_stmt 1 view .LVU17
+  68              		.loc 1 42 18 is_stmt 0 view .LVU18
+  69 0020 DDED027A 		vldr.32	s15, [sp, #8]	@ int
+  70 0024 F8EE677A 		vcvt.f32.u32	s15, s15
+  71 0028 C0ED127A 		vstr.32	s15, [r0, #72]
+  43:BSP_DJI/Src/PID.c **** 
+  44:BSP_DJI/Src/PID.c ****     pid->Dbuf[0] = pid->Dbuf[1] = pid->Dbuf[2] = 0.0f;
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 3
+
+
+  72              		.loc 1 44 5 is_stmt 1 view .LVU19
+  73              		.loc 1 44 48 is_stmt 0 view .LVU20
+  74 002c 0022     		movs	r2, #0
+  75 002e C261     		str	r2, [r0, #28]	@ float
+  76              		.loc 1 44 33 view .LVU21
+  77 0030 8261     		str	r2, [r0, #24]	@ float
+  78              		.loc 1 44 18 view .LVU22
+  79 0032 4261     		str	r2, [r0, #20]	@ float
+  45:BSP_DJI/Src/PID.c ****     pid->sum_error = 0.0f;
+  80              		.loc 1 45 5 is_stmt 1 view .LVU23
+  81              		.loc 1 45 20 is_stmt 0 view .LVU24
+  82 0034 0261     		str	r2, [r0, #16]	@ float
+  46:BSP_DJI/Src/PID.c ****     pid->error[0] = pid->error[1] = pid->error[2] = 0.0f;
+  83              		.loc 1 46 5 is_stmt 1 view .LVU25
+  84              		.loc 1 46 51 is_stmt 0 view .LVU26
+  85 0036 C260     		str	r2, [r0, #12]	@ float
+  86              		.loc 1 46 35 view .LVU27
+  87 0038 8260     		str	r2, [r0, #8]	@ float
+  88              		.loc 1 46 19 view .LVU28
+  89 003a 4260     		str	r2, [r0, #4]	@ float
+  47:BSP_DJI/Src/PID.c ****     pid->Pout = pid->Iout = pid->Dout = pid->Out = 0.0f;
+  90              		.loc 1 47 5 is_stmt 1 view .LVU29
+  91              		.loc 1 47 50 is_stmt 0 view .LVU30
+  92 003c 8263     		str	r2, [r0, #56]	@ float
+  93              		.loc 1 47 39 view .LVU31
+  94 003e 4263     		str	r2, [r0, #52]	@ float
+  95              		.loc 1 47 27 view .LVU32
+  96 0040 0263     		str	r2, [r0, #48]	@ float
+  97              		.loc 1 47 15 view .LVU33
+  98 0042 C262     		str	r2, [r0, #44]	@ float
+  48:BSP_DJI/Src/PID.c **** 
+  49:BSP_DJI/Src/PID.c ****     pid->DeadZone = DeadZone;
+  99              		.loc 1 49 5 is_stmt 1 view .LVU34
+ 100              		.loc 1 49 19 is_stmt 0 view .LVU35
+ 101 0044 BDF80C20 		ldrh	r2, [sp, #12]
+ 102 0048 A0F85020 		strh	r2, [r0, #80]	@ movhi
+  50:BSP_DJI/Src/PID.c ****     return 1;
+ 103              		.loc 1 50 5 is_stmt 1 view .LVU36
+ 104              		.loc 1 50 12 is_stmt 0 view .LVU37
+ 105 004c 0120     		movs	r0, #1
+ 106              	.LVL3:
+ 107              	.L2:
+  51:BSP_DJI/Src/PID.c **** }
+ 108              		.loc 1 51 1 view .LVU38
+ 109 004e 02B0     		add	sp, sp, #8
+ 110              	.LCFI1:
+ 111              		.cfi_remember_state
+ 112              		.cfi_def_cfa_offset 0
+ 113              	.LVL4:
+ 114              		.loc 1 51 1 view .LVU39
+ 115              		@ sp needed
+ 116 0050 7047     		bx	lr
+ 117              	.LVL5:
+ 118              	.L3:
+ 119              	.LCFI2:
+ 120              		.cfi_restore_state
+  31:BSP_DJI/Src/PID.c ****     }
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 4
+
+
+ 121              		.loc 1 31 16 view .LVU40
+ 122 0052 0020     		movs	r0, #0
+ 123              	.LVL6:
+  31:BSP_DJI/Src/PID.c ****     }
+ 124              		.loc 1 31 16 view .LVU41
+ 125 0054 FBE7     		b	.L2
+ 126              		.cfi_endproc
+ 127              	.LFE150:
+ 129              		.section	.text.PID_Parameter_Update,"ax",%progbits
+ 130              		.align	1
+ 131              		.global	PID_Parameter_Update
+ 132              		.syntax unified
+ 133              		.thumb
+ 134              		.thumb_func
+ 136              	PID_Parameter_Update:
+ 137              	.LVL7:
+ 138              	.LFB151:
+  52:BSP_DJI/Src/PID.c **** 
+  53:BSP_DJI/Src/PID.c **** /**
+  54:BSP_DJI/Src/PID.c ****  * @brief  pid参数更新
+  55:BSP_DJI/Src/PID.c ****  * @note	 用于分段pid参数更新
+  56:BSP_DJI/Src/PID.c ****  * @param  PID: PID结构体指针
+  57:BSP_DJI/Src/PID.c ****  * @retval 1：正常；0：错误
+  58:BSP_DJI/Src/PID.c ****  */
+  59:BSP_DJI/Src/PID.c **** uint8_t PID_Parameter_Update(pid_type *pid, const float Pidpara[])
+  60:BSP_DJI/Src/PID.c **** {
+ 139              		.loc 1 60 1 is_stmt 1 view -0
+ 140              		.cfi_startproc
+ 141              		@ args = 0, pretend = 0, frame = 0
+ 142              		@ frame_needed = 0, uses_anonymous_args = 0
+ 143              		@ link register save eliminated.
+  61:BSP_DJI/Src/PID.c ****     pid->kp = Pidpara[0];
+ 144              		.loc 1 61 5 view .LVU43
+ 145              		.loc 1 61 22 is_stmt 0 view .LVU44
+ 146 0000 0B68     		ldr	r3, [r1]	@ float
+ 147              		.loc 1 61 13 view .LVU45
+ 148 0002 0362     		str	r3, [r0, #32]	@ float
+  62:BSP_DJI/Src/PID.c ****     pid->ki = Pidpara[1];
+ 149              		.loc 1 62 5 is_stmt 1 view .LVU46
+ 150              		.loc 1 62 22 is_stmt 0 view .LVU47
+ 151 0004 4B68     		ldr	r3, [r1, #4]	@ float
+ 152              		.loc 1 62 13 view .LVU48
+ 153 0006 4362     		str	r3, [r0, #36]	@ float
+  63:BSP_DJI/Src/PID.c ****     pid->kd = Pidpara[2];
+ 154              		.loc 1 63 5 is_stmt 1 view .LVU49
+ 155              		.loc 1 63 22 is_stmt 0 view .LVU50
+ 156 0008 8B68     		ldr	r3, [r1, #8]	@ float
+ 157              		.loc 1 63 13 view .LVU51
+ 158 000a 8362     		str	r3, [r0, #40]	@ float
+  64:BSP_DJI/Src/PID.c ****     return 1;
+ 159              		.loc 1 64 5 is_stmt 1 view .LVU52
+  65:BSP_DJI/Src/PID.c **** }
+ 160              		.loc 1 65 1 is_stmt 0 view .LVU53
+ 161 000c 0120     		movs	r0, #1
+ 162              	.LVL8:
+ 163              		.loc 1 65 1 view .LVU54
+ 164 000e 7047     		bx	lr
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 5
+
+
+ 165              		.cfi_endproc
+ 166              	.LFE151:
+ 168              		.section	.text.Pid_cal,"ax",%progbits
+ 169              		.align	1
+ 170              		.global	Pid_cal
+ 171              		.syntax unified
+ 172              		.thumb
+ 173              		.thumb_func
+ 175              	Pid_cal:
+ 176              	.LVL9:
+ 177              	.LFB152:
+  66:BSP_DJI/Src/PID.c **** 
+  67:BSP_DJI/Src/PID.c **** /**
+  68:BSP_DJI/Src/PID.c ****  * @brief  PID计算函数
+  69:BSP_DJI/Src/PID.c ****  * @note
+  70:BSP_DJI/Src/PID.c ****  * @param  *PID: PID结构体指针
+  71:BSP_DJI/Src/PID.c ****  * @param  dst: 目标值
+  72:BSP_DJI/Src/PID.c ****  * @param  real: 实际值
+  73:BSP_DJI/Src/PID.c ****  * @retval 计算得出的输出值
+  74:BSP_DJI/Src/PID.c ****  */
+  75:BSP_DJI/Src/PID.c **** float Pid_cal(pid_type *PID, float dst, float real)
+  76:BSP_DJI/Src/PID.c **** {
+ 178              		.loc 1 76 1 is_stmt 1 view -0
+ 179              		.cfi_startproc
+ 180              		@ args = 0, pretend = 0, frame = 0
+ 181              		@ frame_needed = 0, uses_anonymous_args = 0
+ 182              		@ link register save eliminated.
+  77:BSP_DJI/Src/PID.c ****     if (PID == NULL)
+ 183              		.loc 1 77 5 view .LVU56
+ 184              		.loc 1 77 8 is_stmt 0 view .LVU57
+ 185 0000 0346     		mov	r3, r0
+ 186 0002 0028     		cmp	r0, #0
+ 187 0004 00F0BB80 		beq	.L18
+  78:BSP_DJI/Src/PID.c ****     {
+  79:BSP_DJI/Src/PID.c ****         return 0.0f;
+  80:BSP_DJI/Src/PID.c ****     }
+  81:BSP_DJI/Src/PID.c **** 
+  82:BSP_DJI/Src/PID.c ****     PID->error[2] = PID->error[1];
+ 188              		.loc 1 82 5 is_stmt 1 view .LVU58
+ 189              		.loc 1 82 31 is_stmt 0 view .LVU59
+ 190 0008 90ED027A 		vldr.32	s14, [r0, #8]
+ 191              		.loc 1 82 19 view .LVU60
+ 192 000c 80ED037A 		vstr.32	s14, [r0, #12]
+  83:BSP_DJI/Src/PID.c ****     PID->error[1] = PID->error[0];
+ 193              		.loc 1 83 5 is_stmt 1 view .LVU61
+ 194              		.loc 1 83 31 is_stmt 0 view .LVU62
+ 195 0010 90ED016A 		vldr.32	s12, [r0, #4]
+ 196              		.loc 1 83 19 view .LVU63
+ 197 0014 80ED026A 		vstr.32	s12, [r0, #8]
+  84:BSP_DJI/Src/PID.c ****     PID->dst = dst;
+ 198              		.loc 1 84 5 is_stmt 1 view .LVU64
+ 199              		.loc 1 84 14 is_stmt 0 view .LVU65
+ 200 0018 80ED0F0A 		vstr.32	s0, [r0, #60]
+  85:BSP_DJI/Src/PID.c ****     PID->real = real;
+ 201              		.loc 1 85 5 is_stmt 1 view .LVU66
+ 202              		.loc 1 85 15 is_stmt 0 view .LVU67
+ 203 001c C0ED100A 		vstr.32	s1, [r0, #64]
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 6
+
+
+  86:BSP_DJI/Src/PID.c ****     PID->error[0] = dst - real;
+ 204              		.loc 1 86 5 is_stmt 1 view .LVU68
+ 205              		.loc 1 86 25 is_stmt 0 view .LVU69
+ 206 0020 30EE600A 		vsub.f32	s0, s0, s1
+ 207              	.LVL10:
+ 208              		.loc 1 86 19 view .LVU70
+ 209 0024 80ED010A 		vstr.32	s0, [r0, #4]
+  87:BSP_DJI/Src/PID.c ****     if (fabsf(PID->error[0]) < PID->DeadZone)
+ 210              		.loc 1 87 5 is_stmt 1 view .LVU71
+ 211              		.loc 1 87 9 is_stmt 0 view .LVU72
+ 212 0028 B0EEC00A 		vabs.f32	s0, s0
+ 213              		.loc 1 87 35 view .LVU73
+ 214 002c B0F85020 		ldrh	r2, [r0, #80]
+ 215 0030 07EE902A 		vmov	s15, r2	@ int
+ 216              		.loc 1 87 30 view .LVU74
+ 217 0034 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 218              		.loc 1 87 8 view .LVU75
+ 219 0038 B4EEE70A 		vcmpe.f32	s0, s15
+ 220 003c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 221 0040 01D5     		bpl	.L8
+  88:BSP_DJI/Src/PID.c ****     {
+  89:BSP_DJI/Src/PID.c ****         PID->error[0] = 0;
+ 222              		.loc 1 89 9 is_stmt 1 view .LVU76
+ 223              		.loc 1 89 23 is_stmt 0 view .LVU77
+ 224 0042 0022     		movs	r2, #0
+ 225 0044 4260     		str	r2, [r0, #4]	@ float
+ 226              	.L8:
+  90:BSP_DJI/Src/PID.c ****     }
+  91:BSP_DJI/Src/PID.c ****     if (PID->pidmode == PID_POSITION)
+ 227              		.loc 1 91 5 is_stmt 1 view .LVU78
+ 228              		.loc 1 91 12 is_stmt 0 view .LVU79
+ 229 0046 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 230              		.loc 1 91 8 view .LVU80
+ 231 0048 002A     		cmp	r2, #0
+ 232 004a 54D1     		bne	.L10
+  92:BSP_DJI/Src/PID.c ****     {
+  93:BSP_DJI/Src/PID.c ****         PID->Pout = PID->kp * PID->error[0];
+ 233              		.loc 1 93 9 is_stmt 1 view .LVU81
+ 234              		.loc 1 93 24 is_stmt 0 view .LVU82
+ 235 004c D3ED086A 		vldr.32	s13, [r3, #32]
+ 236              		.loc 1 93 41 view .LVU83
+ 237 0050 D3ED017A 		vldr.32	s15, [r3, #4]
+ 238              		.loc 1 93 29 view .LVU84
+ 239 0054 66EEA76A 		vmul.f32	s13, s13, s15
+ 240              		.loc 1 93 19 view .LVU85
+ 241 0058 C3ED0B6A 		vstr.32	s13, [r3, #44]
+  94:BSP_DJI/Src/PID.c **** 
+  95:BSP_DJI/Src/PID.c ****         PID->sum_error += PID->error[0];
+ 242              		.loc 1 95 9 is_stmt 1 view .LVU86
+ 243              		.loc 1 95 12 is_stmt 0 view .LVU87
+ 244 005c 93ED047A 		vldr.32	s14, [r3, #16]
+ 245              		.loc 1 95 24 view .LVU88
+ 246 0060 37EE877A 		vadd.f32	s14, s15, s14
+ 247 0064 83ED047A 		vstr.32	s14, [r3, #16]
+  96:BSP_DJI/Src/PID.c ****         PID->Iout = PID->ki * PID->sum_error;
+ 248              		.loc 1 96 9 is_stmt 1 view .LVU89
+ 249              		.loc 1 96 24 is_stmt 0 view .LVU90
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 7
+
+
+ 250 0068 D3ED095A 		vldr.32	s11, [r3, #36]
+ 251              		.loc 1 96 29 view .LVU91
+ 252 006c 27EE257A 		vmul.f32	s14, s14, s11
+ 253              		.loc 1 96 19 view .LVU92
+ 254 0070 83ED0C7A 		vstr.32	s14, [r3, #48]
+  97:BSP_DJI/Src/PID.c **** 
+  98:BSP_DJI/Src/PID.c ****         PID->Dbuf[2] = PID->Dbuf[1];
+ 255              		.loc 1 98 9 is_stmt 1 view .LVU93
+ 256              		.loc 1 98 33 is_stmt 0 view .LVU94
+ 257 0074 9A69     		ldr	r2, [r3, #24]	@ float
+ 258              		.loc 1 98 22 view .LVU95
+ 259 0076 DA61     		str	r2, [r3, #28]	@ float
+  99:BSP_DJI/Src/PID.c ****         PID->Dbuf[1] = PID->Dbuf[0];
+ 260              		.loc 1 99 9 is_stmt 1 view .LVU96
+ 261              		.loc 1 99 33 is_stmt 0 view .LVU97
+ 262 0078 5A69     		ldr	r2, [r3, #20]	@ float
+ 263              		.loc 1 99 22 view .LVU98
+ 264 007a 9A61     		str	r2, [r3, #24]	@ float
+ 100:BSP_DJI/Src/PID.c ****         PID->Dbuf[0] = (PID->error[0] - PID->error[1]);
+ 265              		.loc 1 100 9 is_stmt 1 view .LVU99
+ 266              		.loc 1 100 39 is_stmt 0 view .LVU100
+ 267 007c 77EEC67A 		vsub.f32	s15, s15, s12
+ 268              		.loc 1 100 22 view .LVU101
+ 269 0080 C3ED057A 		vstr.32	s15, [r3, #20]
+ 101:BSP_DJI/Src/PID.c ****         PID->Dout = PID->kd * PID->Dbuf[0];
+ 270              		.loc 1 101 9 is_stmt 1 view .LVU102
+ 271              		.loc 1 101 24 is_stmt 0 view .LVU103
+ 272 0084 93ED0A6A 		vldr.32	s12, [r3, #40]
+ 273              		.loc 1 101 29 view .LVU104
+ 274 0088 67EE867A 		vmul.f32	s15, s15, s12
+ 275              		.loc 1 101 19 view .LVU105
+ 276 008c C3ED0D7A 		vstr.32	s15, [r3, #52]
+ 102:BSP_DJI/Src/PID.c ****         PID->Iout = LIMIT(PID->Iout, (-1 * PID->MaxIout), PID->MaxIout); 
+ 277              		.loc 1 102 9 is_stmt 1 view .LVU106
+ 278              		.loc 1 102 21 is_stmt 0 view .LVU107
+ 279 0090 D3ED125A 		vldr.32	s11, [r3, #72]
+ 280 0094 B1EE656A 		vneg.f32	s12, s11
+ 281 0098 B4EEC67A 		vcmpe.f32	s14, s12
+ 282 009c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 283 00a0 06D4     		bmi	.L11
+ 284              		.loc 1 102 21 discriminator 2 view .LVU108
+ 285 00a2 B4EEE57A 		vcmpe.f32	s14, s11
+ 286 00a6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 287 00aa 1EDD     		ble	.L26
+ 288              		.loc 1 102 21 discriminator 4 view .LVU109
+ 289 00ac B0EE656A 		vmov.f32	s12, s11
+ 290              	.L11:
+ 291              		.loc 1 102 19 discriminator 8 view .LVU110
+ 292 00b0 83ED0C6A 		vstr.32	s12, [r3, #48]
+ 103:BSP_DJI/Src/PID.c ****         PID->Out = PID->Pout + PID->Iout + PID->Dout;
+ 293              		.loc 1 103 9 is_stmt 1 view .LVU111
+ 294              		.loc 1 103 30 is_stmt 0 view .LVU112
+ 295 00b4 76EE866A 		vadd.f32	s13, s13, s12
+ 296              		.loc 1 103 42 view .LVU113
+ 297 00b8 77EEA67A 		vadd.f32	s15, s15, s13
+ 298              		.loc 1 103 18 view .LVU114
+ 299 00bc C3ED0E7A 		vstr.32	s15, [r3, #56]
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 8
+
+
+ 104:BSP_DJI/Src/PID.c ****         PID->Out = LIMIT(PID->Out, (-1 * PID->MaxOut), PID->MaxOut);  
+ 300              		.loc 1 104 9 is_stmt 1 view .LVU115
+ 301              		.loc 1 104 20 is_stmt 0 view .LVU116
+ 302 00c0 D3ED116A 		vldr.32	s13, [r3, #68]
+ 303 00c4 B1EE667A 		vneg.f32	s14, s13
+ 304 00c8 F4EEC77A 		vcmpe.f32	s15, s14
+ 305 00cc F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 306 00d0 06D4     		bmi	.L13
+ 307              		.loc 1 104 20 discriminator 2 view .LVU117
+ 308 00d2 F4EEE67A 		vcmpe.f32	s15, s13
+ 309 00d6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 310 00da 09DD     		ble	.L27
+ 311              		.loc 1 104 20 discriminator 4 view .LVU118
+ 312 00dc B0EE667A 		vmov.f32	s14, s13
+ 313              	.L13:
+ 314              		.loc 1 104 18 discriminator 8 view .LVU119
+ 315 00e0 83ED0E7A 		vstr.32	s14, [r3, #56]
+ 316              	.L15:
+ 105:BSP_DJI/Src/PID.c ****     }
+ 106:BSP_DJI/Src/PID.c ****     else if (PID->pidmode == PID_DELTA)
+ 107:BSP_DJI/Src/PID.c ****     {
+ 108:BSP_DJI/Src/PID.c ****         PID->Pout = PID->kp * (PID->error[0] - PID->error[1]);
+ 109:BSP_DJI/Src/PID.c ****         PID->Iout = PID->ki * PID->error[0];
+ 110:BSP_DJI/Src/PID.c ****         PID->Dbuf[2] = PID->Dbuf[1];
+ 111:BSP_DJI/Src/PID.c ****         PID->Dbuf[1] = PID->Dbuf[0];
+ 112:BSP_DJI/Src/PID.c ****         PID->Dbuf[0] = (PID->error[0] - 2.0f * PID->error[1] + PID->error[2]);
+ 113:BSP_DJI/Src/PID.c ****         PID->Dout = PID->kd * PID->Dbuf[0];
+ 114:BSP_DJI/Src/PID.c ****         PID->Out += PID->Pout + PID->Iout + PID->Dout;
+ 115:BSP_DJI/Src/PID.c ****         PID->Out = LIMIT(PID->Out, (-1 * PID->MaxOut), PID->MaxOut);  
+ 116:BSP_DJI/Src/PID.c ****     }
+ 117:BSP_DJI/Src/PID.c **** 
+ 118:BSP_DJI/Src/PID.c ****     return PID->Out;
+ 317              		.loc 1 118 5 is_stmt 1 view .LVU120
+ 318              		.loc 1 118 15 is_stmt 0 view .LVU121
+ 319 00e4 93ED0E0A 		vldr.32	s0, [r3, #56]
+ 320 00e8 7047     		bx	lr
+ 321              	.L26:
+ 102:BSP_DJI/Src/PID.c ****         PID->Out = PID->Pout + PID->Iout + PID->Dout;
+ 322              		.loc 1 102 21 discriminator 5 view .LVU122
+ 323 00ea B0EE476A 		vmov.f32	s12, s14
+ 324 00ee DFE7     		b	.L11
+ 325              	.L27:
+ 104:BSP_DJI/Src/PID.c ****         PID->Out = LIMIT(PID->Out, (-1 * PID->MaxOut), PID->MaxOut);  
+ 326              		.loc 1 104 20 discriminator 5 view .LVU123
+ 327 00f0 B0EE677A 		vmov.f32	s14, s15
+ 328 00f4 F4E7     		b	.L13
+ 329              	.L10:
+ 106:BSP_DJI/Src/PID.c ****     {
+ 330              		.loc 1 106 10 is_stmt 1 view .LVU124
+ 106:BSP_DJI/Src/PID.c ****     {
+ 331              		.loc 1 106 13 is_stmt 0 view .LVU125
+ 332 00f6 012A     		cmp	r2, #1
+ 333 00f8 F4D1     		bne	.L15
+ 108:BSP_DJI/Src/PID.c ****         PID->Iout = PID->ki * PID->error[0];
+ 334              		.loc 1 108 9 is_stmt 1 view .LVU126
+ 108:BSP_DJI/Src/PID.c ****         PID->Iout = PID->ki * PID->error[0];
+ 335              		.loc 1 108 24 is_stmt 0 view .LVU127
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 9
+
+
+ 336 00fa D3ED087A 		vldr.32	s15, [r3, #32]
+ 108:BSP_DJI/Src/PID.c ****         PID->Iout = PID->ki * PID->error[0];
+ 337              		.loc 1 108 42 view .LVU128
+ 338 00fe D3ED016A 		vldr.32	s13, [r3, #4]
+ 108:BSP_DJI/Src/PID.c ****         PID->Iout = PID->ki * PID->error[0];
+ 339              		.loc 1 108 46 view .LVU129
+ 340 0102 76EEC65A 		vsub.f32	s11, s13, s12
+ 108:BSP_DJI/Src/PID.c ****         PID->Iout = PID->ki * PID->error[0];
+ 341              		.loc 1 108 29 view .LVU130
+ 342 0106 67EEA57A 		vmul.f32	s15, s15, s11
+ 108:BSP_DJI/Src/PID.c ****         PID->Iout = PID->ki * PID->error[0];
+ 343              		.loc 1 108 19 view .LVU131
+ 344 010a C3ED0B7A 		vstr.32	s15, [r3, #44]
+ 109:BSP_DJI/Src/PID.c ****         PID->Dbuf[2] = PID->Dbuf[1];
+ 345              		.loc 1 109 9 is_stmt 1 view .LVU132
+ 109:BSP_DJI/Src/PID.c ****         PID->Dbuf[2] = PID->Dbuf[1];
+ 346              		.loc 1 109 24 is_stmt 0 view .LVU133
+ 347 010e D3ED095A 		vldr.32	s11, [r3, #36]
+ 109:BSP_DJI/Src/PID.c ****         PID->Dbuf[2] = PID->Dbuf[1];
+ 348              		.loc 1 109 29 view .LVU134
+ 349 0112 66EEA55A 		vmul.f32	s11, s13, s11
+ 109:BSP_DJI/Src/PID.c ****         PID->Dbuf[2] = PID->Dbuf[1];
+ 350              		.loc 1 109 19 view .LVU135
+ 351 0116 C3ED0C5A 		vstr.32	s11, [r3, #48]
+ 110:BSP_DJI/Src/PID.c ****         PID->Dbuf[1] = PID->Dbuf[0];
+ 352              		.loc 1 110 9 is_stmt 1 view .LVU136
+ 110:BSP_DJI/Src/PID.c ****         PID->Dbuf[1] = PID->Dbuf[0];
+ 353              		.loc 1 110 33 is_stmt 0 view .LVU137
+ 354 011a 9A69     		ldr	r2, [r3, #24]	@ float
+ 110:BSP_DJI/Src/PID.c ****         PID->Dbuf[1] = PID->Dbuf[0];
+ 355              		.loc 1 110 22 view .LVU138
+ 356 011c DA61     		str	r2, [r3, #28]	@ float
+ 111:BSP_DJI/Src/PID.c ****         PID->Dbuf[0] = (PID->error[0] - 2.0f * PID->error[1] + PID->error[2]);
+ 357              		.loc 1 111 9 is_stmt 1 view .LVU139
+ 111:BSP_DJI/Src/PID.c ****         PID->Dbuf[0] = (PID->error[0] - 2.0f * PID->error[1] + PID->error[2]);
+ 358              		.loc 1 111 33 is_stmt 0 view .LVU140
+ 359 011e 5A69     		ldr	r2, [r3, #20]	@ float
+ 111:BSP_DJI/Src/PID.c ****         PID->Dbuf[0] = (PID->error[0] - 2.0f * PID->error[1] + PID->error[2]);
+ 360              		.loc 1 111 22 view .LVU141
+ 361 0120 9A61     		str	r2, [r3, #24]	@ float
+ 112:BSP_DJI/Src/PID.c ****         PID->Dout = PID->kd * PID->Dbuf[0];
+ 362              		.loc 1 112 9 is_stmt 1 view .LVU142
+ 112:BSP_DJI/Src/PID.c ****         PID->Dout = PID->kd * PID->Dbuf[0];
+ 363              		.loc 1 112 46 is_stmt 0 view .LVU143
+ 364 0122 36EE066A 		vadd.f32	s12, s12, s12
+ 112:BSP_DJI/Src/PID.c ****         PID->Dout = PID->kd * PID->Dbuf[0];
+ 365              		.loc 1 112 39 view .LVU144
+ 366 0126 76EEC66A 		vsub.f32	s13, s13, s12
+ 112:BSP_DJI/Src/PID.c ****         PID->Dout = PID->kd * PID->Dbuf[0];
+ 367              		.loc 1 112 62 view .LVU145
+ 368 012a 37EE267A 		vadd.f32	s14, s14, s13
+ 112:BSP_DJI/Src/PID.c ****         PID->Dout = PID->kd * PID->Dbuf[0];
+ 369              		.loc 1 112 22 view .LVU146
+ 370 012e 83ED057A 		vstr.32	s14, [r3, #20]
+ 113:BSP_DJI/Src/PID.c ****         PID->Out += PID->Pout + PID->Iout + PID->Dout;
+ 371              		.loc 1 113 9 is_stmt 1 view .LVU147
+ 113:BSP_DJI/Src/PID.c ****         PID->Out += PID->Pout + PID->Iout + PID->Dout;
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 10
+
+
+ 372              		.loc 1 113 24 is_stmt 0 view .LVU148
+ 373 0132 D3ED0A6A 		vldr.32	s13, [r3, #40]
+ 113:BSP_DJI/Src/PID.c ****         PID->Out += PID->Pout + PID->Iout + PID->Dout;
+ 374              		.loc 1 113 29 view .LVU149
+ 375 0136 27EE267A 		vmul.f32	s14, s14, s13
+ 113:BSP_DJI/Src/PID.c ****         PID->Out += PID->Pout + PID->Iout + PID->Dout;
+ 376              		.loc 1 113 19 view .LVU150
+ 377 013a 83ED0D7A 		vstr.32	s14, [r3, #52]
+ 114:BSP_DJI/Src/PID.c ****         PID->Out = LIMIT(PID->Out, (-1 * PID->MaxOut), PID->MaxOut);  
+ 378              		.loc 1 114 9 is_stmt 1 view .LVU151
+ 114:BSP_DJI/Src/PID.c ****         PID->Out = LIMIT(PID->Out, (-1 * PID->MaxOut), PID->MaxOut);  
+ 379              		.loc 1 114 12 is_stmt 0 view .LVU152
+ 380 013e D3ED0E6A 		vldr.32	s13, [r3, #56]
+ 114:BSP_DJI/Src/PID.c ****         PID->Out = LIMIT(PID->Out, (-1 * PID->MaxOut), PID->MaxOut);  
+ 381              		.loc 1 114 31 view .LVU153
+ 382 0142 77EEA57A 		vadd.f32	s15, s15, s11
+ 114:BSP_DJI/Src/PID.c ****         PID->Out = LIMIT(PID->Out, (-1 * PID->MaxOut), PID->MaxOut);  
+ 383              		.loc 1 114 43 view .LVU154
+ 384 0146 37EE277A 		vadd.f32	s14, s14, s15
+ 114:BSP_DJI/Src/PID.c ****         PID->Out = LIMIT(PID->Out, (-1 * PID->MaxOut), PID->MaxOut);  
+ 385              		.loc 1 114 18 view .LVU155
+ 386 014a 76EE877A 		vadd.f32	s15, s13, s14
+ 387 014e C3ED0E7A 		vstr.32	s15, [r3, #56]
+ 115:BSP_DJI/Src/PID.c ****     }
+ 388              		.loc 1 115 9 is_stmt 1 view .LVU156
+ 115:BSP_DJI/Src/PID.c ****     }
+ 389              		.loc 1 115 20 is_stmt 0 view .LVU157
+ 390 0152 D3ED116A 		vldr.32	s13, [r3, #68]
+ 391 0156 B1EE667A 		vneg.f32	s14, s13
+ 392 015a F4EEC77A 		vcmpe.f32	s15, s14
+ 393 015e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 394 0162 06D4     		bmi	.L16
+ 115:BSP_DJI/Src/PID.c ****     }
+ 395              		.loc 1 115 20 discriminator 2 view .LVU158
+ 396 0164 F4EEE67A 		vcmpe.f32	s15, s13
+ 397 0168 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 398 016c 04DD     		ble	.L28
+ 115:BSP_DJI/Src/PID.c ****     }
+ 399              		.loc 1 115 20 discriminator 4 view .LVU159
+ 400 016e B0EE667A 		vmov.f32	s14, s13
+ 401              	.L16:
+ 115:BSP_DJI/Src/PID.c ****     }
+ 402              		.loc 1 115 18 discriminator 8 view .LVU160
+ 403 0172 83ED0E7A 		vstr.32	s14, [r3, #56]
+ 404 0176 B5E7     		b	.L15
+ 405              	.L28:
+ 115:BSP_DJI/Src/PID.c ****     }
+ 406              		.loc 1 115 20 discriminator 5 view .LVU161
+ 407 0178 B0EE677A 		vmov.f32	s14, s15
+ 408 017c F9E7     		b	.L16
+ 409              	.LVL11:
+ 410              	.L18:
+  79:BSP_DJI/Src/PID.c ****     }
+ 411              		.loc 1 79 16 view .LVU162
+ 412 017e 9FED010A 		vldr.32	s0, .L29
+ 413              	.LVL12:
+ 119:BSP_DJI/Src/PID.c **** }
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 11
+
+
+ 414              		.loc 1 119 1 view .LVU163
+ 415 0182 7047     		bx	lr
+ 416              	.L30:
+ 417              		.align	2
+ 418              	.L29:
+ 419 0184 00000000 		.word	0
+ 420              		.cfi_endproc
+ 421              	.LFE152:
+ 423              		.section	.text.PID_clear,"ax",%progbits
+ 424              		.align	1
+ 425              		.global	PID_clear
+ 426              		.syntax unified
+ 427              		.thumb
+ 428              		.thumb_func
+ 430              	PID_clear:
+ 431              	.LVL13:
+ 432              	.LFB153:
+ 120:BSP_DJI/Src/PID.c **** 
+ 121:BSP_DJI/Src/PID.c **** /**
+ 122:BSP_DJI/Src/PID.c ****  * @brief  PID清零
+ 123:BSP_DJI/Src/PID.c ****  * @note   误差输出清零，防止重启时电机异常输出
+ 124:BSP_DJI/Src/PID.c ****  * @param  *pid: 要清的pid
+ 125:BSP_DJI/Src/PID.c ****  * @retval 1：正常；0：错误
+ 126:BSP_DJI/Src/PID.c ****  */
+ 127:BSP_DJI/Src/PID.c **** uint8_t PID_clear(pid_type *pid)
+ 128:BSP_DJI/Src/PID.c **** {
+ 433              		.loc 1 128 1 is_stmt 1 view -0
+ 434              		.cfi_startproc
+ 435              		@ args = 0, pretend = 0, frame = 0
+ 436              		@ frame_needed = 0, uses_anonymous_args = 0
+ 437              		@ link register save eliminated.
+ 129:BSP_DJI/Src/PID.c ****     if (pid == NULL)
+ 438              		.loc 1 129 5 view .LVU165
+ 439              		.loc 1 129 8 is_stmt 0 view .LVU166
+ 440 0000 68B1     		cbz	r0, .L33
+ 130:BSP_DJI/Src/PID.c ****     {
+ 131:BSP_DJI/Src/PID.c ****         return 0;
+ 132:BSP_DJI/Src/PID.c ****     }
+ 133:BSP_DJI/Src/PID.c **** 
+ 134:BSP_DJI/Src/PID.c ****     pid->error[0] = pid->error[1] = pid->error[2] = 0.0f;
+ 441              		.loc 1 134 5 is_stmt 1 view .LVU167
+ 442              		.loc 1 134 51 is_stmt 0 view .LVU168
+ 443 0002 0022     		movs	r2, #0
+ 444 0004 C260     		str	r2, [r0, #12]	@ float
+ 445              		.loc 1 134 35 view .LVU169
+ 446 0006 8260     		str	r2, [r0, #8]	@ float
+ 447              		.loc 1 134 19 view .LVU170
+ 448 0008 4260     		str	r2, [r0, #4]	@ float
+ 135:BSP_DJI/Src/PID.c ****     pid->sum_error = 0.0f;
+ 449              		.loc 1 135 5 is_stmt 1 view .LVU171
+ 450              		.loc 1 135 20 is_stmt 0 view .LVU172
+ 451 000a 0261     		str	r2, [r0, #16]	@ float
+ 136:BSP_DJI/Src/PID.c ****     pid->Dbuf[0] = pid->Dbuf[1] = pid->Dbuf[2] = 0.0f;
+ 452              		.loc 1 136 5 is_stmt 1 view .LVU173
+ 453              		.loc 1 136 48 is_stmt 0 view .LVU174
+ 454 000c C261     		str	r2, [r0, #28]	@ float
+ 455              		.loc 1 136 33 view .LVU175
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 12
+
+
+ 456 000e 8261     		str	r2, [r0, #24]	@ float
+ 457              		.loc 1 136 18 view .LVU176
+ 458 0010 4261     		str	r2, [r0, #20]	@ float
+ 137:BSP_DJI/Src/PID.c ****     pid->Out = pid->Pout = pid->Iout = pid->Dout = 0.0f;
+ 459              		.loc 1 137 5 is_stmt 1 view .LVU177
+ 460              		.loc 1 137 50 is_stmt 0 view .LVU178
+ 461 0012 4263     		str	r2, [r0, #52]	@ float
+ 462              		.loc 1 137 38 view .LVU179
+ 463 0014 0263     		str	r2, [r0, #48]	@ float
+ 464              		.loc 1 137 26 view .LVU180
+ 465 0016 C262     		str	r2, [r0, #44]	@ float
+ 466              		.loc 1 137 14 view .LVU181
+ 467 0018 8263     		str	r2, [r0, #56]	@ float
+ 138:BSP_DJI/Src/PID.c ****     return 1;
+ 468              		.loc 1 138 5 is_stmt 1 view .LVU182
+ 469              		.loc 1 138 12 is_stmt 0 view .LVU183
+ 470 001a 0120     		movs	r0, #1
+ 471              	.LVL14:
+ 472              		.loc 1 138 12 view .LVU184
+ 473 001c 7047     		bx	lr
+ 474              	.LVL15:
+ 475              	.L33:
+ 131:BSP_DJI/Src/PID.c ****     }
+ 476              		.loc 1 131 16 view .LVU185
+ 477 001e 0020     		movs	r0, #0
+ 478              	.LVL16:
+ 139:BSP_DJI/Src/PID.c **** }
+ 479              		.loc 1 139 1 view .LVU186
+ 480 0020 7047     		bx	lr
+ 481              		.cfi_endproc
+ 482              	.LFE153:
+ 484              		.global	Yaw_Speed
+ 485              		.section	.bss.Yaw_Speed,"aw",%nobits
+ 486              		.align	2
+ 489              	Yaw_Speed:
+ 490 0000 00000000 		.space	8
+ 490      00000000 
+ 491              		.text
+ 492              	.Letext0:
+ 493              		.file 2 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 494              		.file 3 "D:/Apps/ARM_GCC/arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 495              		.file 4 "BSP_DJI/INC/PID.h"
+ARM GAS  C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 PID.c
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:20     .text.PID_Parameter_Init:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:26     .text.PID_Parameter_Init:00000000 PID_Parameter_Init
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:130    .text.PID_Parameter_Update:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:136    .text.PID_Parameter_Update:00000000 PID_Parameter_Update
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:169    .text.Pid_cal:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:175    .text.Pid_cal:00000000 Pid_cal
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:419    .text.Pid_cal:00000184 $d
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:424    .text.PID_clear:00000000 $t
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:430    .text.PID_clear:00000000 PID_clear
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:489    .bss.Yaw_Speed:00000000 Yaw_Speed
+C:\Users\Lenovo\AppData\Local\Temp\cc7JnxJB.s:486    .bss.Yaw_Speed:00000000 $d
+
+NO UNDEFINED SYMBOLS
